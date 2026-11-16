@@ -12,10 +12,10 @@ On an older Claude Code without `--marketplace`, use two steps: `claude plugin m
 
 ## Commands
 
-- `/liveswarm:demo`: replay of a real Claude Code session (12 agents), served locally and opened in your browser.
+- `/liveswarm:demo`: replay of a real Claude Code session (main agent plus 12 subagents), served locally and opened in your browser.
 - `/liveswarm:watch [--url URL]`: put agent cursors on your running dev server (any framework), through a local proxy.
-- `/liveswarm:record`: film the next session, vertical and widescreen, with timelapse and end card.
-- `/liveswarm:setup`: add the dev-only Vite tagger for exact element landings.
+- `/liveswarm:record [--stop]`: after `watch`, film the build as vertical and widescreen videos with timelapse and end card. Stops by itself when the agents go quiet.
+- `/liveswarm:setup`: add the dev-only Vite tagger (one file copied to `.liveswarm/`) for exact element landings.
 - `/liveswarm:doctor`: check that everything works.
 
 ## Notes

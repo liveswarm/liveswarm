@@ -7,8 +7,8 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const VERSION = '0.1.0';
 const HERE = path.dirname(fileURLToPath(import.meta.url));
+const VERSION = (() => { try { return JSON.parse(fs.readFileSync(path.join(HERE, '..', '.claude-plugin', 'plugin.json'), 'utf8')).version; } catch { return 'unknown'; } })();
 const HOME = process.env.LIVESWARM_HOME || path.join(os.homedir(), '.liveswarm');
 const PORT = Number(process.env.LIVESWARM_PORT || 7777);
 const SOCK = path.join(HOME, 'hook.sock');
@@ -26,6 +26,7 @@ const log = (...a) => console.error(new Date().toISOString(), ...a);
 // ---------------------------------------------------------------- state
 let seq = 0;
 let eventCount = 0;
+let lastActivity = Date.now();   // last hook event or viewer; see the idle exit below
 let lastSession = '';
 const clients = new Set();
 const sessions = new Map(); // id -> { agents: Map, pending: [], mapped: Map(agentId->{label,parent}), preCmd: Map }
@@ -180,7 +181,7 @@ function broadcast(ev) {
 }
 function emit(session, kind, agent, extra = {}) {
   const ev = { v: 1, seq: ++seq, ts: Date.now(), session, kind, agent: { ...agent }, ...extra };
-  eventCount++;
+  eventCount++; lastActivity = Date.now();
   appendLog(session, 'events', ev);
   broadcast(ev);
 }
@@ -397,6 +398,16 @@ function tcpHandler(req, res) {
 }
 
 setInterval(() => { for (const r of clients) { try { r.write(': ping\n\n'); } catch { clients.delete(r); } } }, 15000).unref?.();
+
+// Exit on its own when nobody needs it: 2 hours with no hook events and no open viewer, or the plugin was
+// uninstalled or updated (its files are gone). The next Claude Code session starts a fresh one.
+const IDLE_MS = Number(process.env.LIVESWARM_IDLE_MIN || 120) * 60000;
+setInterval(() => {
+  if (clients.size) lastActivity = Date.now();
+  // Claude Code keeps an uninstalled plugin's folder but marks it with .orphaned_at.
+  if (!fs.existsSync(OVERLAY) || fs.existsSync(path.join(HERE, '..', '.orphaned_at'))) { log('plugin was uninstalled or updated: exiting'); process.exit(0); }
+  if (Date.now() - lastActivity > IDLE_MS) { log(`idle for ${IDLE_MS / 60000} min: exiting`); process.exit(0); }
+}, 60000).unref?.();
 
 function probeSocket() {
   return new Promise((resolve) => {

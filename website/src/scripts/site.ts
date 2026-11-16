@@ -1,4 +1,4 @@
-/** Small page behaviours: theme, copy, stars, video, email, and starting the hero build. */
+/** Small page behaviours: copy, stars, video, and starting the hero build. */
 import { site } from '../config';
 import { track } from './track';
 
@@ -52,6 +52,7 @@ $$<HTMLElement>('[data-install]').forEach((box) => {
 
 /* ---- live star count: shown only when GitHub really returns one ---- */
 function showStars(n: number) {
+  if (n < 1) return; /* a new repo: show the button without a zero beside it */
   const text = n >= 10000 ? (n / 1000).toFixed(0) + 'k' : n >= 1000 ? (n / 1000).toFixed(1).replace(/\.0$/, '') + 'k' : String(n);
   $$<HTMLElement>('[data-stars]').forEach((el) => {
     el.textContent = text;
@@ -228,50 +229,6 @@ $$<HTMLElement>('[data-loop]').forEach((el) => {
   new IntersectionObserver((entries) => {
     for (const e of entries) el.classList.toggle('is-paused', !e.isIntersecting);
   }).observe(el);
-});
-
-/* ---- email: one field, one endpoint ---- */
-$$<HTMLFormElement>('[data-email]').forEach((form) => {
-  const status = form.querySelector<HTMLElement>('[data-email-status]')!;
-  const input = form.querySelector<HTMLInputElement>('input[type=email]')!;
-  const button = form.querySelector<HTMLButtonElement>('button')!;
-  const say = (text: string, error = false) => {
-    status.textContent = text;
-    status.classList.toggle('is-error', error);
-  };
-  form.noValidate = true;
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const email = input.value.trim();
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      say('That does not look like an email address. Check it and try again.', true);
-      input.focus();
-      return;
-    }
-    const endpoint = form.dataset.endpoint;
-    if (!endpoint) {
-      /* The list is not connected yet. Say so rather than pretend; nothing is sent or stored. */
-      say('Thanks! The list is not switched on yet, so nothing was saved. Check back at launch.');
-      return;
-    }
-    button.disabled = true;
-    say('Adding you…');
-    try {
-      const res = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json', accept: 'application/json' },
-        body: JSON.stringify({ email }),
-      });
-      if (!res.ok) throw new Error(String(res.status));
-      track('email_submit');
-      form.reset();
-      say('Thanks! You are on the list.');
-    } catch {
-      say('That did not go through. Check your connection and try again.', true);
-    } finally {
-      button.disabled = false;
-    }
-  });
 });
 
 /* ---- the hero build ---- */

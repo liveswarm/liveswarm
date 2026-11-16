@@ -49,6 +49,7 @@ const outDir = path.resolve(opt('out-dir', 'liveswarm-videos'));
 const waitStartS = Number(opt('wait-start', '600'));   // abort if no session.start within this many seconds
 const idleS = Number(opt('idle', '300'));              // finalise if no events for this long after session.start
 const follow = !flag('no-follow');
+const attach = flag('attach');   // film the session that is already running (from a slash command): start now, ignore session.end, stop on --idle quiet or a signal
 const heroLockS = Number(opt('hero-lock', '75'));   // seconds the camera holds on the hero after the first agent starts
 const dwellS = Number(opt('dwell', '12'));          // minimum seconds on a section before the camera moves
 const finaleS = Number(opt('finale', '14'));        // length of the closing pan over the finished page (0 = none)
@@ -153,6 +154,7 @@ try {
 
 const T0 = Date.now();
 const events = [];
+let gotWork = false;   // attach mode: the quiet timer starts only once an agent spawns or edits a file
 let ended = false, sawSession = false, sessionStartTs = null, sessionEndTs = null, lastEventAt = Date.now();
 const ac = new AbortController();
 let stopReq = false, sigCount = 0, browser = null, failed = false;
@@ -175,6 +177,7 @@ const streamDone = (async () => {
           if (ev.kind === 'hello') continue;
           const t = (Date.now() - T0) / 1000;
           lastEventAt = Date.now();
+          if (ev.file || ev.kind === 'agent.start') gotWork = true;
           if (ev.kind === 'session.start' && !sawSession) { sawSession = true; sessionStartTs = ev.ts; log(`session started at +${t.toFixed(1)}s`); }
           events.push({
             t: Math.round(t * 1000) / 1000, seq: ev.seq, ts: ev.ts, kind: ev.kind,
@@ -182,7 +185,7 @@ const streamDone = (async () => {
             tool: ev.tool, file: ev.file ? String(ev.file).split('/').pop() : undefined,
             range: ev.range, added: ev.added, removed: ev.removed, summary: ev.summary,
           });
-          if (ev.kind === 'session.end' && sawSession) { ended = true; sessionEndTs = ev.ts; log(`session ended at +${t.toFixed(1)}s`); }
+          if (ev.kind === 'session.end' && sawSession && !attach) { ended = true; sessionEndTs = ev.ts; log(`session ended at +${t.toFixed(1)}s`); }
         }
       }
     } catch (e) { if (ac.signal.aborted) break; }
@@ -205,10 +208,11 @@ const closeAll = async () => {
 
 let closeWall = 0, finaleAt = null;
 try {
-  log('*** START THIS BEFORE THE CLAUDE SESSION: no history is replayed. Waiting for session.start... ***');
+  if (attach) { sawSession = true; sessionStartTs = Date.now(); lastEventAt = Date.now(); log('filming the running session from now on'); }
+  else log('*** START THIS BEFORE THE CLAUDE SESSION: no history is replayed. Waiting for session.start... ***');
   fs.mkdirSync(outDir, { recursive: true });
   work = fs.mkdtempSync(path.join(outDir, '.film-'));
-  browser = await chromium.launch({ channel: 'chrome' });
+  browser = await chromium.launch({ channel: 'chrome', handleSIGINT: false, handleSIGTERM: false, handleSIGHUP: false });
   for (const f of FORMATS) {
     const dir = path.join(work, f.id);
     const ctx = await browser.newContext({
@@ -235,6 +239,8 @@ try {
     if (!sawSession) {
       if (!warned && el > 60) { warned = true; console.error('[film] WARNING: no session.start after 60 s. Was the Claude session started before film.mjs? SessionStart events are not replayed.'); }
       if (el > waitStartS) throw Object.assign(new Error(`no session.start within ${waitStartS}s`), { fatal: true });
+    } else if (attach && !gotWork) {
+      if (el > waitStartS) throw Object.assign(new Error(`no agent work within ${waitStartS}s of starting`), { fatal: true });
     } else if ((Date.now() - lastEventAt) / 1000 > idleS) { log(`no events for ${idleS}s: finalising`); break; }
     await sleep(250);
   }
@@ -351,7 +357,7 @@ for (const r of runs) log(`  ${r.a.toFixed(1).padStart(7)}-${r.b.toFixed(1).padS
 
 // ---------------------------------------------------------------- end card still
 const mkEndcard = async (f, outPng) => {
-  const b = await chromium.launch({ channel: 'chrome' });
+  const b = await chromium.launch({ channel: 'chrome', handleSIGINT: false, handleSIGTERM: false, handleSIGHUP: false });
   const pg = await b.newPage({ viewport: { width: f.outW, height: f.outH }, deviceScaleFactor: 1 });
   const q = new URLSearchParams();
   for (const [kk, v] of Object.entries(stats)) q.set(kk, String(v));
@@ -365,7 +371,7 @@ const mkEndcard = async (f, outPng) => {
 // ---------------------------------------------------------------- corner mark (transparent PNG)
 const mkMark = async (f, outPng) => {
   const u = Math.min(f.outW, f.outH) / 1080;   // 1 on both formats
-  const b = await chromium.launch({ channel: 'chrome' });
+  const b = await chromium.launch({ channel: 'chrome', handleSIGINT: false, handleSIGTERM: false, handleSIGHUP: false });
   const pg = await b.newPage({ viewport: { width: Math.ceil(330 * u), height: Math.ceil(56 * u) }, deviceScaleFactor: 1 });
   await pg.setContent(`<!doctype html><meta charset="utf-8"><style>
     html,body{margin:0;background:transparent}

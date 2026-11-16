@@ -1,6 +1,6 @@
 /**
  * Everything that changes when the repo, domain or providers go live is here.
- * Nothing in this file is a live service yet: the repo is not public and the domain is not registered.
+ * The GitHub repo is public. The domain is not registered yet.
  */
 const repo = 'liveswarm/liveswarm';
 
@@ -12,18 +12,15 @@ export const site = {
   repoUrl: `https://github.com/${repo}`,
   starsApi: `https://api.github.com/repos/${repo}`,
   sponsorUrl: 'https://github.com/sponsors/liveswarm',
-  /** Placeholder until the repo is public. */
+  /** The install line shown on the page. */
   install: 'claude plugin install liveswarm --marketplace liveswarm/liveswarm',
   title: 'Liveswarm: watch your AI build it',
   description:
     'Every AI agent becomes a named cursor on the app it is building. Watch Claude Code and its subagents split up the work and put your app together, live. Free and open source.',
-  /**
-   * The email form posts JSON { email } here. Empty means the list is not switched on:
-   * the form then says so and sends nothing. Set PUBLIC_EMAIL_ENDPOINT to turn it on.
-   */
-  emailEndpoint: (import.meta.env.PUBLIC_EMAIL_ENDPOINT as string | undefined) ?? '',
   /** The company behind Liveswarm, shown in the footer. */
   company: 'Luven Technologies LLC',
+  /** Contact address, shown in the footer. */
+  contact: 'everest@luven.ai',
   /**
    * The recorded run in "Real run, real agents": one real Claude Code session building an invented
    * hotel page called Nocturne. It is a timelapse, so `label` is shown wherever the footage plays.

@@ -52,6 +52,14 @@ function parse(argv, spec, { rest = false } = {}) {
 }
 
 // ---------------------------------------------------------------- helpers
+function portTaken(port) {
+  return new Promise((resolve) => { const s = net.connect({ host: '127.0.0.1', port }); s.once('connect', () => { s.destroy(); resolve(true); }); s.once('error', () => resolve(false)); s.setTimeout(800, () => { s.destroy(); resolve(false); }); });
+}
+function portOwner(port) {
+  const r = spawnSync('lsof', ['-nP', `-iTCP:${port}`, '-sTCP:LISTEN', '-Fc'], { encoding: 'utf8' });
+  const m = r.status === 0 && /\nc(.+)/.exec('\n' + r.stdout);
+  return m ? ` (${m[1]})` : '';
+}
 async function healthy(port = CPORT) {
   try { const r = await fetch(`http://127.0.0.1:${port}/health`, { signal: AbortSignal.timeout(800) }); return r.ok && (await r.json()).ok === true; } catch { return false; }
 }
@@ -118,13 +126,16 @@ async function doctor() {
   const curl = cmdOk('curl');
   row(!!curl, 'curl', curl || 'not found', curl ? null : 'hooks send events with curl; install it'); if (!curl) bad = true;
   const up = await healthy();
-  row(up ? true : 'warn', 'conductor', up ? `running on ${CONDUCTOR}` : `not running on port ${CPORT} (starts automatically with watch, or with your next Claude Code session)`);
+  const taken = !up && (await portTaken(CPORT));
+  if (taken) bad = true;
+  row(up ? true : taken ? false : 'warn', 'conductor', up ? `running on ${CONDUCTOR}` : taken ? `port ${CPORT} is used by another program${portOwner(CPORT)}` : `not running on port ${CPORT} (starts automatically with watch, or with your next Claude Code session)`,
+    taken ? `Liveswarm needs that port. Quit that program, or pick a free port for both Claude Code and Liveswarm: export LIVESWARM_PORT=7787 in your shell profile, then restart Claude Code.` : null);
   const chrome = findChrome();
   row(chrome ? true : 'warn', 'chrome', chrome || 'not found (only `record` needs it)', chrome ? null : 'install Google Chrome to use `record`');
   const ff = cmdOk('ffmpeg', ['-version']);
   row(ff ? true : 'warn', 'ffmpeg', ff || 'not found (only `record` needs it)', ff ? null : ffmpegHint());
   out(`  [ok]   ${'plugin'.padEnd(10)} version ${VERSION}`);
-  out(bad ? '\nSomething required is missing (see above).' : '\nReady. Try: liveswarm demo');
+  out(bad ? '\nSomething required is missing (see above).' : '\nReady. Try: /liveswarm:demo');
   return bad ? 1 : 0;
 }
 
@@ -176,7 +187,7 @@ async function demo(argv) {
 }
 
 // ---------------------------------------------------------------- watch
-const DEV_PORTS = [3000, 3001, 3002, 3003, 3004, 3005, 4321, 5173, 5174, 5175, 5176, 5177, 5178, 5179, 5180, 8000, 8080, 8888];
+const DEV_PORTS = [3000, 3001, 3002, 3003, 3004, 3005, 4200, 4321, 5173, 5174, 5175, 5176, 5177, 5178, 5179, 5180, 8000, 8080, 8888];
 const MARKERS = [[/\/@vite\/client/, 'Vite', 100], [/\/_next\//, 'Next.js', 100], [/astro-dev-toolbar|\/@id\/astro|data-astro-cid/i, 'Astro', 100], [/webpack-dev-server|__webpack_hmr|sockjs-node/, 'webpack', 90], [/livereload|browser-sync/i, 'live-reload server', 50]];
 
 async function probePort(port) {
@@ -211,14 +222,14 @@ async function findDevServer() {
 async function watch(argv) {
   if (wantsHelp(argv)) return cmdHelp('watch');
   const { o } = parse(argv, { url: 'str', port: 'int', 'no-open': 'bool' });
-  if (!(await ensureConductor())) { err(`could not start the conductor on port ${CPORT} (see ${path.join(HOME, 'conductor.log')}). Run: liveswarm doctor`); return 1; }
+  if (!(await ensureConductor())) { err((await portTaken(CPORT)) ? `port ${CPORT} is used by another program${portOwner(CPORT)}, so Liveswarm cannot start. Run /liveswarm:doctor for the fix.` : `could not start the conductor on port ${CPORT} (see ${path.join(HOME, 'conductor.log')}). Run /liveswarm:doctor for details.`); return 1; }
   let upstream = o.url;
   if (upstream) {
     if (!/^https?:\/\//i.test(upstream)) upstream = 'http://' + upstream;
     try { new URL(upstream); } catch { usage(`--url is not a valid URL: ${o.url}`); }
   } else {
     const found = await findDevServer();
-    if (!found.length) { err('No dev server found on 127.0.0.1/localhost (tried ports 3000-3005, 4321, 5173-5180, 8000, 8080, 8888).\nStart your app, or pass its address: liveswarm watch --url http://localhost:PORT'); return 1; }
+    if (!found.length) { err('No dev server found on 127.0.0.1/localhost (tried ports 3000-3005, 4200, 4321, 5173-5180, 8000, 8080, 8888).\nStart your app, or pass its address: /liveswarm:watch --url http://localhost:PORT'); return 1; }
     if (found.length > 1) { out('Found:'); found.forEach((f, i) => out(`  ${i === 0 ? '*' : ' '} ${f.url}  ${f.kind}`)); }
     upstream = found[0].url;
     if (found.length > 1) out(`Using ${upstream} (override with --url).`);
@@ -313,25 +324,30 @@ async function setup(argv) {
   let pkg = {}; try { pkg = JSON.parse(fs.readFileSync(path.join(cwd, 'package.json'), 'utf8')); } catch {}
   const hasVite = { ...pkg.dependencies, ...pkg.devDependencies }.vite;
   if (!cfgName && !hasVite) {
-    out('This does not look like a Vite project, and that is fine: `liveswarm watch` works without any setup.\nIt uses the DOM-mutation fallback to place cursors. (Vite projects can run `liveswarm setup` for exact landings.)');
+    out('This does not look like a Vite project, and that is fine: `/liveswarm:watch` works without any setup.\nIt uses the DOM-mutation fallback to place cursors. (Vite projects can run `/liveswarm:setup` for exact landings.)');
     return 0;
   }
   if (!cfgName) { out('Vite found in package.json but no vite.config.* file. Create one with a plugins array, then run setup again.'); return 1; }
   if (/\.c(j|t)s$/.test(cfgName)) { out(`${cfgName} is CommonJS; the Liveswarm Vite plugin is ESM. Rename it to .mjs/.mts (or "type": "module"), then run setup again.`); return 1; }
   const cfg = path.join(cwd, cfgName), src = fs.readFileSync(cfg, 'utf8');
   if (/liveswarm/i.test(src)) { out(`${cfgName} already mentions Liveswarm. Nothing to do.`); return 0; }
-  const local = path.resolve(PLUGIN, '../vite-plugin/index.mjs');
-  const spec = fs.existsSync(local) ? pathToFileURL(local).href : '@liveswarm/vite';
-  if (spec === '@liveswarm/vite') out('Note: use `npm i -D @liveswarm/vite` first (the local plugin copy is not bundled here).');
-  else out(`Note: @liveswarm/vite is not on npm yet, so the import below points at the file inside the Liveswarm checkout:\n  ${local}`);
+  // The tagger ships inside the plugin as one self-contained file (no npm install). It is copied into the
+  // project so vite.config keeps working when the plugin updates or moves.
+  const bundled = path.join(PLUGIN, 'vite', 'liveswarm-vite.mjs');
+  const copyTo = path.join(cwd, '.liveswarm', 'vite.mjs');
+  const spec = './.liveswarm/vite.mjs';
+  if (!fs.existsSync(bundled)) { err(`The bundled Vite tagger is missing (${bundled}). Reinstall the plugin.`); return 1; }
+  out(`Setup copies the Liveswarm Vite tagger (one file, no dependencies) to .liveswarm/vite.mjs and adds it to ${cfgName}.`);
   const next = addPlugin(src, spec);
-  if (!next) { out(`Could not safely find the top-level plugins array in ${cfgName} (it may be nested, computed or ambiguous). Add this yourself:\n  import liveswarm from "${spec}";\n  plugins: [liveswarm(), ...]`); return 1; }
+  if (!next) { out(`Could not safely find the top-level plugins array in ${cfgName} (it may be nested, computed or ambiguous). Do it by hand:\n  mkdir -p .liveswarm && cp "${bundled}" .liveswarm/vite.mjs\n  then in ${cfgName}: import liveswarm from "${spec}";  and  plugins: [liveswarm(), ...]`); return 1; }
   out(`\nChange to ${cfgName}:`);
   lineDiff(src.split('\n'), next.split('\n')).forEach((l) => out('  ' + l));
   if (!o.yes && !(await ask('\nApply? [y/N] '))) { out(process.stdin.isTTY ? 'No changes made.' : 'Not a terminal and no --yes: no changes made.'); return process.stdin.isTTY ? 0 : 1; }
+  fs.mkdirSync(path.dirname(copyTo), { recursive: true });
+  fs.copyFileSync(bundled, copyTo);
   fs.writeFileSync(cfg, next);
   if (!/liveswarm\(\)/.test(fs.readFileSync(cfg, 'utf8'))) { err(`Edit of ${cfgName} did not stick; add the plugin yourself.`); return 1; }
-  out(`Updated ${cfgName}. Restart your dev server. Dev only: nothing is added to production builds.`);
+  out(`Updated ${cfgName} and added .liveswarm/vite.mjs. Restart your dev server. Dev only: nothing is added to production builds.`);
   return 0;
 }
 
@@ -344,32 +360,76 @@ function resolvePlaywright() {
   return null;
 }
 
+// Playwright records video through its own small ffmpeg build (separate from system ffmpeg). Install it once.
+function ensurePlaywrightFfmpeg(pw) {
+  const cli = path.join(path.dirname(pw), 'cli.js');
+  if (!fs.existsSync(cli)) return true;   // unknown layout: let film.mjs report it
+  const r = spawnSync(process.execPath, [cli, 'install', 'ffmpeg'], { encoding: 'utf8' });
+  if (r.status === 0) return true;
+  err(`Could not install Playwright's ffmpeg (needed to capture video). Run this, then retry:\n  node "${cli}" install ffmpeg`);
+  if (r.stderr) err(r.stderr.trim().split('\n').slice(-3).join('\n'));
+  return false;
+}
+
+function recorders() {
+  const live = [];
+  try {
+    for (const f of fs.readdirSync(HOME)) {
+      if (!/^record-\d+\.json$/.test(f)) continue;
+      try { const s = JSON.parse(fs.readFileSync(path.join(HOME, f), 'utf8')); process.kill(s.pid, 0); live.push({ ...s, file: path.join(HOME, f) }); }
+      catch { try { fs.unlinkSync(path.join(HOME, f)); } catch {} }
+    }
+  } catch { /* none */ }
+  return live;
+}
+
 async function record(argv) {
   if (argv.includes('--help') || argv.includes('-h')) return cmdHelp('record');
-  const { o, extra } = parse(argv, { url: 'str', name: 'str', out: 'str' }, { rest: true });
+  const { o, extra } = parse(argv, { url: 'str', name: 'str', out: 'str', now: 'bool', next: 'bool', stop: 'bool', yes: 'bool' }, { rest: true });
+  if (o.stop) {
+    const live = recorders();
+    if (!live.length) { out('No recording is running.'); return 0; }
+    for (const r of live) { try { process.kill(r.pid, 'SIGTERM'); } catch {} out(`Stopping the recording of ${r.url}. Videos are being finished in ${r.out} (about a minute).`); }
+    return 0;
+  }
   if (!cmdOk('ffmpeg', ['-version'])) { err(`record needs ffmpeg. Install it: ${ffmpegHint()}`); return 1; }
   if (!findChrome()) { err('record needs Google Chrome (it is used as the recording browser; no browser is downloaded). Install Chrome and retry.'); return 1; }
   let pw = resolvePlaywright();
   if (!pw) {
     const deps = process.env.LIVESWARM_DEPS || path.join(HOME, 'deps');
-    out(`record needs playwright-core (small, no browser download). Install it to ${deps}?`);
-    if (!(await ask('npm i playwright-core --prefix "' + deps + '"  [y/N] '))) { err(process.stdin.isTTY ? 'Not installed. Run this yourself, then retry:' : 'No terminal to ask. Run this yourself, then retry:'); err(`  npm i playwright-core --prefix "${deps}"`); return 1; }
+    const cmd = `npm i playwright-core --prefix "${deps}"`;
+    // From a slash command there is no terminal to ask: running /liveswarm:record is the request, so install.
+    const go = o.yes || !process.stdin.isTTY || (await ask(`record needs playwright-core (about 8 MB, no browser download), installed once into ${deps}.\n${cmd}  [y/N] `));
+    if (!go) { err(`Not installed. Run this yourself, then retry:\n  ${cmd}`); return 1; }
+    out(`First run: installing playwright-core into ${deps} (about 8 MB, once)...`);
     fs.mkdirSync(deps, { recursive: true });
-    const r = spawnSync('npm', ['i', 'playwright-core', '--prefix', deps], { stdio: 'inherit', shell: process.platform === 'win32', env: { ...process.env, PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1' } });
-    if (r.status !== 0) { err('npm install failed.'); return 1; }
+    const r = spawnSync('npm', ['i', 'playwright-core', '--prefix', deps, '--no-audit', '--no-fund', '--loglevel=error'], { stdio: ['ignore', 'ignore', 'inherit'], shell: process.platform === 'win32', env: { ...process.env, PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1' } });
+    if (r.status !== 0) { err(`npm install failed. Run this yourself, then retry:\n  ${cmd}`); return 1; }
     pw = resolvePlaywright();
     if (!pw) { err('playwright-core still not resolvable after install.'); return 1; }
   }
-  let url = o.url || runningProxyUrl();
-  if (!url) { err('No page to record. Start `liveswarm watch` in another terminal (record then uses it), or pass --url http://...'); return 1; }
-  if (!(await ensureConductor())) { err(`could not start the conductor on port ${CPORT}. Run: liveswarm doctor`); return 1; }
-  const args = ['--url', url, '--name', o.name || 'liveswarm', '--out-dir', path.resolve(o.out || 'liveswarm-videos'), ...extra];
-  out(`Recording ${url}\nStart (or continue) your Claude Code session now; the film starts at its first event and ends with it.\nOutput: ${path.resolve(o.out || 'liveswarm-videos')}  (vertical 1080x1920 + widescreen 1920x1080)`);
+  if (!ensurePlaywrightFfmpeg(pw)) return 1;
+  if (recorders().length) { err('A recording is already running. Stop it first with /liveswarm:record --stop'); return 1; }
+  const url = o.url || runningProxyUrl();
+  if (!url) { err('No page to record. Run /liveswarm:watch first (record films that page), or pass --url http://...'); return 1; }
+  if (!(await ensureConductor())) { err(`could not start the conductor on port ${CPORT}. Run /liveswarm:doctor for details.`); return 1; }
+  // Inside Claude Code (a slash command) the session is already running, so film from now on.
+  // From a terminal, wait for the next session to start, as before.
+  const attach = o.now || (!o.next && !!process.env.CLAUDECODE);
+  const outDir = path.resolve(o.out || 'liveswarm-videos');
+  const args = ['--url', url, '--name', o.name || 'liveswarm', '--out-dir', outDir, ...(attach ? ['--attach'] : []), ...(attach && !extra.includes('--idle') ? ['--idle', '90'] : []), ...extra];
+  out(`Recording ${url}`);
+  out(attach
+    ? 'Filming starts now. Ask Claude to build something; the film ends by itself 90 s after the agents go quiet, or run /liveswarm:record --stop.'
+    : 'Start your Claude Code session now; the film starts at its first event and ends with it (or press Ctrl-C to finish early).');
+  out(`Output: ${outDir}  (vertical 1080x1920 + widescreen 1920x1080)`);
   const child = spawn(process.execPath, [path.join(HERE, 'film.mjs'), ...args], { stdio: 'inherit', env: { ...process.env, LIVESWARM_PW: pw, LIVESWARM_PORT: String(CPORT) } });
+  const pidFile = path.join(HOME, `record-${child.pid}.json`);
+  try { fs.mkdirSync(HOME, { recursive: true, mode: 0o700 }); fs.writeFileSync(pidFile, JSON.stringify({ pid: child.pid, url, out: outDir })); } catch { /* --stop then cannot find it */ }
   // With a terminal, Ctrl-C reaches film.mjs directly (same process group); otherwise forward it.
-  process.on('SIGINT', () => { if (!process.stdin.isTTY) child.kill('SIGINT'); });
+  process.on('SIGINT', () => { if (!process.stdin.isTTY) child.kill('SIGTERM'); });
   process.on('SIGTERM', () => child.kill('SIGTERM'));
-  return new Promise((r) => child.on('exit', (c) => r(c ?? 1)));
+  return new Promise((r) => child.on('exit', (c) => { try { fs.unlinkSync(pidFile); } catch {} r(c ?? 1); }));
 }
 
 // ---------------------------------------------------------------- help
@@ -377,12 +437,15 @@ const HELP = `Liveswarm ${VERSION}: every agent is a cursor on your live app.
 
 Usage: liveswarm <command> [options]
 
-  demo     [--port N] [--no-open]            Replay a real 12-agent Claude Code build in your browser. No setup.
+  demo     [--port N] [--no-open]            Replay a real Claude Code build (12 subagents) in your browser. No setup.
   watch    [--url URL] [--port N] [--no-open] Show live Claude Code sessions as cursors on your running dev server
                                              (any framework). Finds the server itself, or pass --url.
-  record   [--url URL] [--name N] [--out DIR] Film the next session: vertical + widescreen MP4 with end card.
-                                             Uses the running \`watch\` page by default; output in ./liveswarm-videos/.
-                                             Other options (--max, --tail, --target, ...) go to the recorder.
+  record   [--url URL] [--out DIR] [--stop]    Film the build: vertical + widescreen MP4 with end card.
+                                             Films the running \`watch\` page; output in ./liveswarm-videos/.
+                                             Inside Claude Code it films from now until the agents go quiet
+                                             (90 s) or --stop; from a terminal it films the next session
+                                             (--now / --next to choose). Other options (--max, --idle, ...) go
+                                             to the recorder.
   setup    [--yes]                           Vite projects: add the @liveswarm/vite tagger for exact landings.
   doctor                                     Check Node, curl, conductor, Chrome, ffmpeg.
   help                                       This text.

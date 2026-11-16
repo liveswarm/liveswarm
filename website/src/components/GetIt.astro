@@ -13,13 +13,12 @@ import { site } from '../config';
     <div id="get-cta" data-b>
       <InstallCommand id="get-install" where="final" />
     </div>
-    <form class="email" id="get-email" method="post" data-email data-endpoint={site.emailEndpoint} data-b>
-      <label for="email-input">Get Codex, video and stream support first.</label>
-      <div class="email-row">
-        <input id="email-input" name="email" type="email" required autocomplete="email" inputmode="email" placeholder="you@example.com" />
-        <button type="submit" class="btn btn-brand">Notify me</button>
-      </div>
-      <p class="email-status" data-email-status role="status" aria-live="polite"></p>
-    </form>
+    <p class="get-star" id="get-star" data-b>
+      <a class="btn star" href={site.repoUrl} data-track="github_click" data-where="final">
+        <svg data-paint width="17" height="17" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 .9l2.1 4.5 4.9.6-3.6 3.4.9 4.9L8 11.9l-4.3 2.4.9-4.9L1 6l4.9-.6z"></path></svg>
+        Star on GitHub
+        <span class="star-count" data-stars hidden></span>
+      </a>
+    </p>
   </div>
 </section>

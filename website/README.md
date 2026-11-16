@@ -3,8 +3,8 @@
 The launch site for Liveswarm. One static page, built with Astro, black theme only. The hero is the
 demo: a swarm of named agent cursors builds the page in front of the visitor.
 
-Nothing here is deployed. The GitHub repo `liveswarm/liveswarm` and the domain `liveswarm.dev` do
-not exist yet; both are placeholders kept in one place (`src/config.ts`).
+Live at https://liveswarm.dev, deployed with `vercel deploy --prod` from this folder (the Vercel
+project is not connected to GitHub, so a push does not deploy). Repo and domain are set in `src/config.ts`.
 
 ## Run it
 
@@ -93,14 +93,14 @@ today, so keep that answer current.
 
 | What | Where | Today |
 | --- | --- | --- |
-| Repo, domain, install command, sponsor link | `src/config.ts` | Placeholders |
+| Repo, domain, install command, sponsor link | `src/config.ts` | Repo public, domain live, install line tested from GitHub. Sponsor link not set up yet |
 | Star count | fetched from the GitHub API in `src/scripts/site.ts` | No number is shown while the repo is missing, private or rate-limited |
-| Email list | `PUBLIC_EMAIL_ENDPOINT` (see `.env.example`) | Empty: the form tells the visitor the list is not switched on and sends nothing |
-| Analytics | `PUBLIC_ANALYTICS`, `src/scripts/track.ts` | Vercel Web Analytics, loaded only on a deployed build. Events: `install_copy`, `github_click`, `video_play`, `replay_click`, `email_submit` |
+| Analytics | `PUBLIC_ANALYTICS`, `src/scripts/track.ts` | Vercel Web Analytics, loaded only on a deployed build. Events: `install_copy`, `github_click`, `video_play`, `replay_click` |
 | Demo video | `demo` in `src/config.ts`, files in `public/media/` | The real "Nocturne" session (13 agents, 117 edits, 4 min 38 s), cut as described under "Media" |
 | Company name | `company` in `src/config.ts` | Luven Technologies LLC, shown in the footer |
 
-The email endpoint receives `POST` JSON `{ "email": "..." }` and should answer with a 2xx status.
+There is no email list or waitlist on the site. The last call to action is the install line and
+a "Star on GitHub" button; the contact address in the footer is `contact` in `src/config.ts`.
 
 ## Media and fonts
 

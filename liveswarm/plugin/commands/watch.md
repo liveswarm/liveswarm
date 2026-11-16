@@ -8,4 +8,4 @@ Run this with the Bash tool, in the background (run_in_background: true), so the
 
 `node "${CLAUDE_PLUGIN_ROOT}/cli/liveswarm.mjs" watch $ARGUMENTS`
 
-Then read its first lines of output and tell the user the proxied URL in one line. If it says no dev server was found, tell the user to start theirs or pass --url. Say nothing else.
+Then read its first lines of output and tell the user the proxied URL in one line. If it found more than one dev server, name the one it chose and say `--url` picks another. If it says no dev server was found, tell the user to start theirs or pass --url. Say nothing else.

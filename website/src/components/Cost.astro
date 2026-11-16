@@ -4,9 +4,9 @@
  * (one Apple Silicon Mac, Claude Code 2.1.314). Change a figure only when it is measured again.
  */
 const rows = [
-  { fig: '0', unit: 'tokens', what: 'Added by watching', note: 'The hooks never touch Claude’s context. The five slash commands may add about 200 tokens once per session (Claude Code’s own estimate, not confirmed).' },
+  { fig: '0', unit: 'tokens', what: 'Added by watching', note: 'Measured: a fresh Claude Code session starts with no more context with Liveswarm installed than without it.' },
   { fig: '12', unit: 'ms', pre: 'about', what: 'Per event', note: 'Hooks run in the background. Claude never waits on them.' },
-  { fig: '58–62', unit: 'MB', what: 'Memory', note: 'The background service, during the 12-agent session in the video.' },
+  { fig: '58–62', unit: 'MB', what: 'Memory', note: 'The background service, during the session in the video (main agent plus 12 subagents).' },
   { fig: '1.3', unit: '%', pre: 'at most', what: 'CPU', note: 'The same service, in the same session.' },
   { fig: '584', unit: 'KB', what: 'Disk', note: 'Logs for that whole session.' },
   { fig: 'Nothing', unit: '', what: 'Sent off your machine', note: 'It all stays local.' },

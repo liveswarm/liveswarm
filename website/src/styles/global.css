@@ -144,8 +144,7 @@ html.build .hero:not([data-painted])::before { opacity: 0; }
 
 /* Controls that only work with JavaScript are not shown without it. */
 html:not(.js) .copy,
-html:not(.js) [data-theme-toggle],
-html:not(.js) [data-email],
+html:not(.js) [data-theme-toggle] { display: none; }
 
 /* ---------- Shared pieces ---------- */
 
@@ -1456,37 +1455,8 @@ html:not(.js) .reel button { cursor: default; }
   letter-spacing: -0.04em;
 }
 .get .install { margin-top: clamp(28px, 4vw, 44px); }
-.email {
-  max-width: 31rem;
-  margin: clamp(36px, 5vw, 56px) auto 0;
-}
-.email label {
-  display: block;
-  margin-bottom: 12px;
-  color: var(--ink);
-  font-weight: 600;
-}
-.email-row { display: flex; gap: 8px; }
-.email input {
-  flex: 1;
-  min-width: 0;
-  height: 48px;
-  padding: 0 14px;
-  border: 1px solid var(--line-strong);
-  border-radius: 12px;
-  background: #0b0b0d;
-  color: var(--ink);
-  font: inherit;
-}
-.email input::placeholder { color: var(--muted); opacity: 0.8; }
-.email .btn { min-height: 48px; }
-.email-status {
-  min-height: 1.6em;
-  margin-top: 12px;
-  color: var(--muted);
-  font-size: 0.9375rem;
-}
-.email-status.is-error { color: #ff8f9b; }
+.get-star { margin-top: clamp(18px, 2.4vw, 26px); }
+.get-star .btn { min-height: 48px; }
 
 /* Footer */
 .foot { padding: 0 0 40px; }
@@ -1503,7 +1473,7 @@ html:not(.js) .reel button { cursor: default; }
   color: var(--muted);
   font-size: 0.9375rem;
 }
-.foot-cols { display: flex; gap: clamp(40px, 8vw, 104px); }
+.foot-cols { display: flex; flex-wrap: wrap; gap: 28px clamp(36px, 6vw, 88px); }
 .foot-h { margin-bottom: 10px; color: var(--ink); font-size: 0.875rem; font-weight: 600; }
 .foot-cols ul { display: grid; gap: 2px; color: var(--muted); font-size: 0.9375rem; }
 .foot-cols a, .foot-cols span { display: inline-block; padding: 5px 0; text-decoration: none; }
@@ -1603,7 +1573,6 @@ html:not(.js) .reel button { cursor: default; }
 }
 @media (max-width: 380px) {
   .install-cmd { font-size: 0.75rem; }
-  .email-row { flex-direction: column; }
 }
 
 /* The Open Graph card (src/pages/og.astro) */

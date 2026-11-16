@@ -161,7 +161,7 @@ function safeReal(p) {
 }
 
 export default function liveswarm(options = {}) {
-  const conductor = (options.conductor || DEFAULT_CONDUCTOR).replace(/\/+$/, '');
+  const conductor = (options.conductor || process.env.LIVESWARM_CONDUCTOR || (process.env.LIVESWARM_PORT ? `http://127.0.0.1:${process.env.LIVESWARM_PORT}` : DEFAULT_CONDUCTOR)).replace(/\/+$/, '');
   const include = [].concat(options.include || []);
   const exclude = [].concat(options.exclude || []);
   const keepInBuild = options.keepInBuild === true;

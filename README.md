@@ -1,8 +1,8 @@
 # Liveswarm
 
-[![Liveswarm: 12 Claude Code agents building a page as live cursors](liveswarm/media/nocturne-wide.gif)](liveswarm/media/nocturne-wide.mp4)
+[![Liveswarm: Claude Code and 12 subagents building a page as live cursors](liveswarm/media/nocturne-wide.gif)](liveswarm/media/nocturne-wide.mp4)
 
-<sub>A real session: 12 Claude Code agents building one page. Click for the full 69-second video.</sub>
+<sub>A real session: the main Claude Code agent and 12 subagents building one page. Click for the full 69-second video.</sub>
 
 **Watch Claude Code build your app as a swarm of live cursors.**
 Every cursor is a real agent. Every move is a real edit.
@@ -23,17 +23,17 @@ Then run these inside Claude Code:
 
 | Command | What you get |
 |---|---|
-| `/liveswarm:demo` | See it in under a minute. A replay of a real 12-agent build plays on your own screen. |
+| `/liveswarm:demo` | See it in under a minute. A replay of a real build (main agent plus 12 subagents) plays on your own screen. |
 | `/liveswarm:watch` | Your own app, zero setup. Finds your dev server and shows agent cursors on it. |
-| `/liveswarm:record` | Share it. Films your next session in vertical and widescreen, with a smart timelapse and end card. |
-| `/liveswarm:setup` | Exact landings. Adds a dev-only Vite tagger so cursors land on the precise element. |
+| `/liveswarm:record` | Share it. Run it after `watch`, then ask Claude to build. Films the build in vertical and widescreen, with a smart timelapse and end card, and stops by itself when the agents go quiet (or `/liveswarm:record --stop`). |
+| `/liveswarm:setup` | Exact landings. Adds a dev-only Vite tagger (one file in `.liveswarm/`) so cursors land on the precise element. |
 | `/liveswarm:doctor` | Checks that everything is working. |
 
 The demo is labelled "Replay of a real Claude Code session". It is a recording, not a simulation.
 
 ## What it costs you
 
-No model calls and no tokens spent. Liveswarm only listens to events Claude Code already emits, and its hooks run in the background and print nothing. The five slash commands are user-only (`disable-model-invocation`), so Claude does not pick them up on its own; Claude Code's own estimate for their menu entries is about 200 tokens, and that is the worst case. Measured: about 12 ms per event, 58 to 66 MB of memory, no change in input tokens from the hooks. Full numbers in [liveswarm/docs/overhead.md](liveswarm/docs/overhead.md).
+No model calls and no tokens spent. Liveswarm only listens to events Claude Code already emits, and its hooks run in the background and print nothing. The five slash commands are user-only (`disable-model-invocation`), so Claude does not pick them up on its own. Measured: about 12 ms per event, 58 to 66 MB of memory, and no extra input tokens: on Claude Code 2.1.314 a fresh session's starting context was 32,160 tokens with Liveswarm installed and 32,695 without it. Full numbers in [liveswarm/docs/overhead.md](liveswarm/docs/overhead.md).
 
 ## Privacy
 
@@ -56,10 +56,16 @@ Event format and endpoints: [liveswarm/CONTRACT.md](liveswarm/CONTRACT.md).
 | Platform | Status |
 |---|---|
 | macOS | Built and tested here. |
-| Linux | Expected to work (Node 22, curl, bash). Not yet tested. |
+| Linux | Expected to work (Node 20+, curl, bash). Not yet tested. |
 | Windows | Not supported yet. Hooks need bash and curl; use WSL at your own risk. |
 
-Needs Node 22+ and `curl`. `record` also needs Chrome or Playwright browsers and ffmpeg. Works with any web framework through `watch`; exact landings need Vite.
+Needs Node 20+ (22 recommended) and `curl`. `record` also needs Google Chrome and ffmpeg (`brew install ffmpeg`); its first run downloads `playwright-core` and Playwright's small ffmpeg build (about 10 MB, once) into `~/.liveswarm/deps`. Works with any web framework through `watch`; exact landings need Vite.
+
+Liveswarm uses port 7777 on 127.0.0.1. If another program uses it, `/liveswarm:doctor` names it and shows how to pick another port.
+
+## Uninstall
+
+`claude plugin uninstall liveswarm@liveswarm`. The small background helper exits on its own once the plugin is gone (within a minute). `~/.liveswarm` keeps a week of local event logs; delete it if you like.
 
 ## Credits
 

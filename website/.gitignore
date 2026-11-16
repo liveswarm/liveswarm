@@ -9,3 +9,4 @@ dist/
 
 # Review screenshots written by tools/shots.mjs
 review/
+.vercel

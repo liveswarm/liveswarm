@@ -1,5 +1,5 @@
 ---
-description: See Liveswarm in under a minute: a replay of a real 12-agent Claude Code build, on your own screen.
+description: See Liveswarm in under a minute: a replay of a real Claude Code build with 12 subagents, on your own screen.
 argument-hint: "[--port N] [--no-open]"
 disable-model-invocation: true
 allowed-tools: Bash(node:*)
