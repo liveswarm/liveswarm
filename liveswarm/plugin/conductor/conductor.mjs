@@ -350,7 +350,28 @@ function allAgents() {
   for (const s of sessions.values()) for (const a of s.agents.values()) if (a.id !== 'main' && Date.now() - (a.seen || 0) < STALE_MS) out.push(pub(a));
   return out;
 }
-const CORS = { 'access-control-allow-origin': '*', 'access-control-allow-methods': 'GET, OPTIONS', 'access-control-allow-headers': '*' };
+// overlay.js is public code (a <script> tag needs no CORS), so any page may load it. The live feed and
+// /health are readable only from local pages: the app being watched runs on localhost, 127.0.0.1, [::1],
+// a *.localhost name, or the watch proxy. Any other website gets 403, so it cannot read file paths, agent
+// names or command labels. Extra origins (a LAN address, a custom dev domain): LIVESWARM_ORIGINS, comma-separated.
+const PUBLIC = { 'access-control-allow-origin': '*' };
+const EXTRA_ORIGINS = new Set((process.env.LIVESWARM_ORIGINS || '').split(',').map((o) => o.trim().replace(/\/+$/, '').toLowerCase()).filter(Boolean));
+function localOrigin(origin) {
+  if (EXTRA_ORIGINS.has(origin)) return true;
+  try {
+    const u = new URL(origin);
+    if (u.protocol !== 'http:' && u.protocol !== 'https:') return false;
+    const h = u.hostname.toLowerCase();
+    return h === 'localhost' || h === '127.0.0.1' || h === '[::1]' || h.endsWith('.localhost');
+  } catch { return false; }
+}
+// No Origin header: not a cross-site browser request (curl, the recorder, a same-origin load). Allowed.
+function corsFor(req) {
+  const origin = String(req.headers.origin || '').toLowerCase();
+  if (!origin) return {};
+  if (!localOrigin(origin)) return null;
+  return { 'access-control-allow-origin': origin, vary: 'Origin', 'access-control-allow-methods': 'GET, OPTIONS', 'access-control-allow-headers': 'cache-control, last-event-id' };
+}
 
 function sockHandler(req, res) {
   const url = (req.url || '').split('?')[0];
@@ -371,22 +392,24 @@ function tcpHandler(req, res) {
   const host = (req.headers.host || '').toLowerCase();
   if (!/^(127\.0\.0\.1|localhost|\[::1\])(:\d+)?$/.test(host)) { res.writeHead(403); return res.end(); }
   const url = (req.url || '').split('?')[0];
-  if (req.method === 'OPTIONS') { res.writeHead(204, CORS); return res.end(); }
-  if (req.method !== 'GET') { res.writeHead(405, CORS); return res.end(); }
-  if (url === '/health') {
-    res.writeHead(200, { ...CORS, 'content-type': 'application/json', 'cache-control': 'no-cache' });
-    return res.end(JSON.stringify(health()));
-  }
-  if (url === '/overlay.js') {
+  if (url === '/overlay.js' && (req.method === 'GET' || req.method === 'HEAD')) {
     fs.readFile(OVERLAY, (err, buf) => {
-      if (err) { res.writeHead(404, CORS); return res.end('overlay.js not found'); }
-      res.writeHead(200, { ...CORS, 'content-type': 'text/javascript; charset=utf-8', 'cache-control': 'no-cache' });
-      res.end(buf);
+      if (err) { res.writeHead(404, PUBLIC); return res.end('overlay.js not found'); }
+      res.writeHead(200, { ...PUBLIC, 'content-type': 'text/javascript; charset=utf-8', 'cache-control': 'no-cache' });
+      res.end(req.method === 'HEAD' ? undefined : buf);
     });
     return;
   }
+  const cors = corsFor(req);
+  if (!cors) { res.writeHead(403, { 'content-type': 'text/plain' }); return res.end('Liveswarm only serves local pages. Set LIVESWARM_ORIGINS to allow another origin.'); }
+  if (req.method === 'OPTIONS') { res.writeHead(204, cors); return res.end(); }
+  if (req.method !== 'GET') { res.writeHead(405, cors); return res.end(); }
+  if (url === '/health') {
+    res.writeHead(200, { ...cors, 'content-type': 'application/json', 'cache-control': 'no-cache' });
+    return res.end(JSON.stringify(health()));
+  }
   if (url === '/stream') {
-    res.writeHead(200, { ...CORS, 'content-type': 'text/event-stream', 'cache-control': 'no-cache, no-transform', connection: 'keep-alive', 'x-accel-buffering': 'no' });
+    res.writeHead(200, { ...cors, 'content-type': 'text/event-stream', 'cache-control': 'no-cache, no-transform', connection: 'keep-alive', 'x-accel-buffering': 'no' });
     res.write('retry: 1500\n\n');
     const hello = { v: 1, seq, ts: Date.now(), session: lastSession, kind: 'hello', agent: { id: 'main', type: 'main', label: 'main', parent: null }, agents: allAgents() };
     res.write(`event: swarm\ndata: ${JSON.stringify(hello)}\n\n`);
@@ -394,7 +417,7 @@ function tcpHandler(req, res) {
     req.on('close', () => clients.delete(res));
     return;
   }
-  res.writeHead(404, CORS); res.end();
+  res.writeHead(404, cors); res.end();
 }
 
 setInterval(() => { for (const r of clients) { try { r.write(': ping\n\n'); } catch { clients.delete(r); } } }, 15000).unref?.();

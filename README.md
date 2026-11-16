@@ -37,7 +37,7 @@ No model calls and no tokens spent. Liveswarm only listens to events Claude Code
 
 ## Privacy
 
-Everything stays on 127.0.0.1. Hook events travel over a local unix socket. File contents are never forwarded and shell commands are redacted before display or logging. No accounts, no telemetry, no network calls.
+Everything stays on 127.0.0.1. Hook events travel over a local unix socket. The live feed only answers pages on your own machine (localhost, 127.0.0.1, `*.localhost`): any other website you have open gets refused. If your app runs on a LAN address or a custom dev domain, allow it with `LIVESWARM_ORIGINS=http://192.168.1.5:5173`. File contents are never forwarded and shell commands are redacted before display or logging. No accounts, no telemetry, no network calls.
 
 ## How it works
 

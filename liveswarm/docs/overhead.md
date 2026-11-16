@@ -64,5 +64,5 @@ The build itself is what costs tokens; watching it costs nothing. (That session 
 ## Privacy
 
 Hook events reach the conductor over a unix socket in `~/.liveswarm` (mode 0700). The browser stream binds
-127.0.0.1 only. File contents are never forwarded, and Bash commands are redacted before they are shown or
+127.0.0.1 only and answers only local pages (other websites get 403). File contents are never forwarded, and Bash commands are redacted before they are shown or
 logged.

@@ -450,7 +450,8 @@ Usage: liveswarm <command> [options]
   doctor                                     Check Node, curl, conductor, Chrome, ffmpeg.
   help                                       This text.
 
-Environment: LIVESWARM_PORT (conductor, default 7777), LIVESWARM_HOME (default ~/.liveswarm), LIVESWARM=off.
+Environment: LIVESWARM_PORT (conductor, default 7777), LIVESWARM_HOME (default ~/.liveswarm), LIVESWARM=off,
+LIVESWARM_ORIGINS (extra page origins allowed to read the live feed, comma-separated; local pages always are).
 Exit codes: 0 ok, 1 error, 2 bad usage.`;
 
 // ---------------------------------------------------------------- main

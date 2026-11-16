@@ -1,6 +1,6 @@
 {
   "name": "liveswarm",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Shows Claude Code building your app as a swarm of named cursors on the live preview. Every cursor is a real agent, every move a real hook event. No model calls.",
   "author": {
     "name": "Liveswarm"
