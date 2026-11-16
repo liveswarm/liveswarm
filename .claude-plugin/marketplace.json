@@ -10,7 +10,7 @@
       "name": "liveswarm",
       "source": "./liveswarm/plugin",
       "description": "Every Claude Code agent appears as a named cursor on your live app preview. Free, open source, no model calls.",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "license": "MIT",
       "keywords": [
         "cursors",
