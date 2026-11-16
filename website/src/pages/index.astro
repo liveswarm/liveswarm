@@ -1,0 +1,36 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Hero from '../components/Hero.astro';
+import BeforeAfter from '../components/BeforeAfter.astro';
+import DemoReel from '../components/DemoReel.astro';
+import HowItWorks from '../components/HowItWorks.astro';
+import Cost from '../components/Cost.astro';
+import UseCases from '../components/UseCases.astro';
+import Share from '../components/Share.astro';
+import OpenSource from '../components/OpenSource.astro';
+import Faq from '../components/Faq.astro';
+import GetIt from '../components/GetIt.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Base>
+  <a class="skip-link" href="#hero-title">Skip to content</a>
+  <Nav />
+  <main>
+    <Hero />
+    <DemoReel />
+    <BeforeAfter />
+    <HowItWorks />
+    <Cost />
+    <UseCases />
+    <Share />
+    <OpenSource />
+    <Faq />
+    <GetIt />
+  </main>
+  <Footer />
+  <script>
+    import '../scripts/site.ts';
+  </script>
+</Base>

@@ -1,0 +1,39 @@
+---
+import Mark from './Mark.astro';
+import { site } from '../config';
+const year = new Date().getFullYear();
+---
+
+<footer class="foot ink" id="site-footer" data-scene data-b>
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <a class="logo" href="/" aria-label="Liveswarm, home"><Mark size={24} /><span class="wordmark">Liveswarm</span></a>
+        <p>Watch your AI build it. Free and open source, made by {site.company}.</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer">
+        <div>
+          <p class="foot-h">Product</p>
+          <ul>
+            <li><a href="#demo">Real run</a></li>
+            <li><a href="#how">How it works</a></li>
+            <li><a href="#use-cases">Use cases</a></li>
+            <li><a href="#faq">FAQ</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="foot-h">Open source</p>
+          <ul>
+            <li><a href={site.repoUrl} data-track="github_click" data-where="footer">GitHub</a></li>
+            <li><a href={site.sponsorUrl}>Sponsor</a></li>
+            <li><span>MIT license</span></li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+    <div class="foot-legal">
+      <p>© {year} {site.company}. Liveswarm is released under the MIT License.</p>
+      <p>Inspired by Joel Califa’s Swarm and Dhvanil Patel’s Swarm Rebuild. Not affiliated with Anthropic or OpenAI.</p>
+    </div>
+  </div>
+</footer>

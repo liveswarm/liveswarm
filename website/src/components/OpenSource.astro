@@ -1,0 +1,30 @@
+---
+import { site } from '../config';
+---
+
+<section class="band open" id="open" data-scene aria-labelledby="open-title">
+  <div class="wrap">
+    <h2 id="open-title" data-b="type">Open source. Stays on your machine.</h2>
+    <ul class="facts" id="open-facts">
+      <li data-b="drop">
+        <h3>MIT licensed</h3>
+        <p>Read it, fork it, change it. All of it is on GitHub.</p>
+      </li>
+      <li data-b="drop">
+        <h3>Runs locally</h3>
+        <p>Events travel over a local socket, and the cursor stream only listens on your own machine.</p>
+      </li>
+      <li data-b="drop">
+        <h3>No account</h3>
+        <p>Nothing to sign up for. Install it and it works.</p>
+      </li>
+      <li data-b="drop">
+        <h3>No telemetry</h3>
+        <p>Your file contents are never forwarded, and nothing is sent home.</p>
+      </li>
+    </ul>
+    <p data-b>
+      <a class="btn" href={site.repoUrl} data-track="github_click" data-where="open-source">Read the source on GitHub</a>
+    </p>
+  </div>
+</section>

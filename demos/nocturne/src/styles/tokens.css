@@ -1,0 +1,63 @@
+/* Nocturne design tokens. Shared by all sections. Do not edit from a section. */
+:root {
+  /* Palette: a desert at night */
+  --ground: #07060f;        /* Midnight Ink: page ground, deepest indigo-black */
+  --ground-2: #0d0b1c;      /* Dusk Well: alternating section ground */
+  --ground-3: #15122b;      /* Indigo Hour: raised panels, cards */
+  --line: rgba(232, 221, 200, 0.14); /* hairlines on dark */
+  --sand: #e8ddc8;          /* Moonlit Sand: primary text, warm off-white */
+  --sand-dim: #a89f8d;      /* Dune Shadow: secondary text */
+  --sand-faint: #6b6558;    /* Cold Ash: tertiary, captions */
+  --star: #f6f4ee;          /* Star White: highlights, tiny glints only */
+  --ember: #e0894a;         /* Lamp Ember: THE accent, sparingly */
+  --ember-soft: rgba(224, 137, 74, 0.18);
+  --dune: #2a2342;          /* Dune Violet: far shapes, illustration fills */
+  --dune-deep: #1a1530;     /* Dune Deep: nearer illustration fills */
+  --sky-top: #05040c;
+  --sky-glow: #2b2150;      /* horizon glow of the sky */
+
+  /* Type */
+  --font-display: "Cormorant Garamond", "Cormorant", Georgia, "Times New Roman", serif;
+  --font-body: "Albert Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --text-xs: 0.75rem;       /* 12 captions, eyebrows (uppercase, tracked) */
+  --text-sm: 0.875rem;      /* 14 small print */
+  --text-base: 1.0625rem;   /* 17 body */
+  --text-lg: 1.25rem;       /* 20 lead paragraph */
+  --text-xl: clamp(1.5rem, 1.2rem + 1vw, 2rem);      /* card titles */
+  --text-2xl: clamp(2.25rem, 1.6rem + 2.4vw, 3.5rem); /* section headings */
+  --text-3xl: clamp(3.5rem, 2rem + 6vw, 7rem);        /* big statements */
+  --text-hero: clamp(4.5rem, 2rem + 11vw, 12rem);     /* hotel name only */
+  --track-eyebrow: 0.28em;
+  --leading-body: 1.7;
+  --leading-display: 1.02;
+
+  /* Spacing (8pt-ish) */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4.5rem;
+  --space-9: 7rem;
+  --space-10: 10rem;
+  --section-pad: clamp(5rem, 10vw, 9rem); /* vertical padding of every section */
+  --gutter: clamp(1.25rem, 5vw, 4rem);
+  --container: 1180px;
+  --container-narrow: 720px;
+
+  /* Radii */
+  --radius-sm: 2px;
+  --radius-md: 6px;
+  --radius-lg: 14px;
+  --radius-pill: 999px;
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 180ms;
+  --dur-med: 420ms;
+  --dur-slow: 900ms;
+  --dur-reveal: 1200ms;
+}

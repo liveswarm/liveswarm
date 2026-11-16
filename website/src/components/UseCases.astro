@@ -1,0 +1,105 @@
+---
+import Cursor from './Cursor.astro';
+---
+
+<section class="band uses" id="use-cases" data-scene aria-labelledby="uses-title">
+  <div class="wrap">
+    <h2 id="uses-title" data-b="type">Watch any kind of build.</h2>
+    <ul class="tiles" id="use-grid">
+      <li class="tile tile-wide" data-b="drop">
+        <div class="art art-app" data-paint aria-hidden="true">
+          <div class="win">
+            <div class="win-bar"><i></i><i></i><i></i><span>localhost:5173</span></div>
+            <div class="win-body">
+              <div class="p-nav"><b></b><i></i><i></i><i></i><em></em></div>
+              <div class="p-hero">
+                <div class="p-copy"><i class="pick"></i><i class="h1"></i><i class="h2"></i><i class="tx"></i><i class="tx short"></i><i class="bt"></i></div>
+                <div class="p-chart"><i style="--v:38%"></i><i style="--v:62%"></i><i style="--v:48%"></i><i style="--v:80%"></i><i style="--v:66%"></i><i style="--v:92%"></i></div>
+              </div>
+              <div class="p-cards"><i></i><i></i><i></i></div>
+            </div>
+            <Cursor label="Hero" hue={24} x="41%" y="34%" />
+            <Cursor label="Charts" hue={84} x="70%" y="41%" />
+            <Cursor label="Pricing" hue={176} x="30%" y="58%" />
+          </div>
+          <div class="chips">
+            <span class="lsw-chip" style="--h:24"><i class="sw"></i><span class="add">+3</span><span class="del">−1</span><span>Hero.tsx</span></span>
+            <span class="lsw-chip" style="--h:84"><i class="sw"></i><span class="add">+9</span><span class="del">−2</span><span>Chart.tsx</span></span>
+            <span class="lsw-chip" style="--h:176"><i class="sw"></i><span class="add">+12</span><span class="del">−0</span><span>Pricing.tsx</span></span>
+          </div>
+        </div>
+        <h3>Apps and sites</h3>
+        <p>Landing pages, dashboards, whole apps. Each agent lands on the component it is changing, on your own live preview.</p>
+      </li>
+      <li class="tile" data-b="drop">
+        <div class="art art-video" data-paint aria-hidden="true">
+          <div class="v-top">
+            <div class="v-mon"><b></b><span>00:12:08</span></div>
+            <div class="v-code">
+              <b>demo.tsx</b>
+              <pre><span>{'<Scene start={12}>'}</span><span>{'  <Clip src="demo"'}</span><span class="hl">{'    trim={[4, 10]} />'}</span><span>{'</Scene>'}</span></pre>
+            </div>
+          </div>
+          <div class="v-tl">
+            <i class="v-ruler"></i>
+            <div class="v-row"><em>V2</em><div class="track"><i class="clip t" style="--l:14%;--w:24%">title</i></div></div>
+            <div class="v-row"><em>V1</em><div class="track"><i class="clip a" style="--l:0%;--w:27%">intro</i><i class="clip b" style="--l:28%;--w:29%">demo</i><i class="clip b" style="--l:59%;--w:20%">demo</i><i class="clip c" style="--l:80%;--w:20%">outro</i></div></div>
+            <div class="v-row"><em>A1</em><div class="track"><i class="clip w" style="--l:0%;--w:100%"></i></div></div>
+            <i class="v-head"></i>
+          </div>
+          <Cursor label="Cut" hue={336} x="62%" y="71%" />
+        </div>
+        <h3>Video, edited from code</h3>
+        <p>Cursors cut clips on a timeline while agents edit a video that is written in code.</p>
+      </li>
+      <li class="tile" data-b="drop">
+        <div class="art art-stream" data-paint aria-hidden="true">
+          <div class="s-scene">
+            <i class="s-h"></i><i class="s-t"></i><i class="s-t short"></i>
+            <div class="s-cards"><i></i><i></i><i></i></div>
+          </div>
+          <div class="s-chat"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          <i class="s-cam"></i>
+          <span class="s-live">Live</span>
+          <span class="lsw-hud live mini-hud"><i class="cd"></i><span>live</span><i class="sep"></i><span>3 agents</span></span>
+          <Cursor label="Hero" hue={24} x="40%" y="17%" />
+          <Cursor label="Cards" hue={222} x="31%" y="55%" />
+        </div>
+        <h3>Live streams</h3>
+        <p>An overlay for OBS, so your audience sees every agent at work.</p>
+      </li>
+      <li class="tile" data-b="drop">
+        <div class="art art-game" data-paint aria-hidden="true">
+          <i class="g-moon"></i>
+          <i class="g-hill"></i>
+          <i class="g-ground"></i>
+          <i class="g-plat p1"></i><i class="g-plat p2"></i><i class="g-plat ghost"></i>
+          <i class="g-coin k1"></i><i class="g-coin k2"></i><i class="g-coin k3"></i>
+          <i class="g-hero"></i>
+          <i class="g-flag"></i>
+          <Cursor label="Level 2" hue={134} x="62%" y="38%" />
+        </div>
+        <h3>Games</h3>
+        <p>Agents lay out a level while the game runs.</p>
+      </li>
+      <li class="tile" data-b="drop">
+        <div class="art art-map" data-paint aria-hidden="true">
+          <svg viewBox="0 0 300 170" preserveAspectRatio="none" focusable="false">
+            <path d="M66 46 L150 86 L238 40 M150 86 L92 138 M150 86 L232 132" fill="none" stroke="currentColor" stroke-width="1.2" vector-effect="non-scaling-stroke"></path>
+            <path d="M66 46 L150 86" fill="none" stroke="oklch(0.71 0.19 304)" stroke-width="1.8" stroke-dasharray="4 5" vector-effect="non-scaling-stroke"></path>
+            <path d="M150 86 L232 132" fill="none" stroke="oklch(0.71 0.19 52)" stroke-width="1.8" stroke-dasharray="4 5" vector-effect="non-scaling-stroke"></path>
+          </svg>
+          <i class="node" style="left:22%;top:27%">api/routes.ts</i>
+          <i class="node hub" style="left:50%;top:50.5%">core/</i>
+          <i class="node" style="left:79%;top:23.5%">auth.ts</i>
+          <i class="node" style="left:30.5%;top:81%">jobs/queue.ts</i>
+          <i class="node" style="left:77%;top:77.5%">tests/</i>
+          <Cursor label="API" hue={304} x="36%" y="38%" up />
+          <Cursor label="Tests" hue={52} x="64%" y="62%" flip />
+        </div>
+        <h3>Work with no screen</h3>
+        <p>Backends and scripts as a live map: files are places, and agents move between them.</p>
+      </li>
+    </ul>
+  </div>
+</section>

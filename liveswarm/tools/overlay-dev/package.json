@@ -1,0 +1,1 @@
+{"name":"liveswarm-overlay-dev","private":true,"type":"module","scripts":{"shoot":"node shoot.mjs"},"dependencies":{"playwright":"^1.65.0"}}

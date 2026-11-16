@@ -1,0 +1,103 @@
+.rituals {
+  background: var(--ground-2);
+  color: var(--sand);
+  padding-block: var(--section-pad);
+  position: relative;
+}
+
+.rituals__inner {
+  display: grid;
+  gap: var(--space-8);
+}
+
+/* lamp light from below: a single ember hairline at the foot */
+.rituals::after {
+  content: "";
+  position: absolute;
+  left: var(--gutter);
+  right: var(--gutter);
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--ember-soft), transparent);
+}
+
+.rituals__eyebrow {
+  margin: 0 0 var(--space-5);
+  font: 500 var(--text-xs) / 1 var(--font-body);
+  letter-spacing: var(--track-eyebrow);
+  text-transform: uppercase;
+  color: var(--sand-dim);
+}
+
+.rituals__title {
+  margin: 0;
+  max-width: 16em;
+  font: 300 var(--text-2xl) / var(--leading-display) var(--font-display);
+}
+
+.rituals__title em {
+  font-style: italic;
+  color: var(--ember);
+}
+
+.rituals__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-7);
+}
+
+.rituals__item {
+  border-top: 1px solid var(--line);
+  padding-top: var(--space-5);
+}
+
+.rituals__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+  color: var(--sand);
+}
+
+.rituals__glyph {
+  width: 48px;
+  height: 48px;
+}
+
+.rituals__time {
+  font: 300 var(--text-xl) / 1 var(--font-display);
+  font-variant-numeric: tabular-nums lining-nums;
+  letter-spacing: 0.04em;
+}
+
+.rituals__when {
+  font: 500 var(--text-xs) / 1 var(--font-body);
+  letter-spacing: var(--track-eyebrow);
+  text-transform: uppercase;
+  color: var(--sand-faint);
+}
+
+.rituals__name {
+  margin: 0 0 var(--space-3);
+  font: 400 var(--text-xl) / 1.15 var(--font-display);
+  color: var(--star);
+}
+
+.rituals__body {
+  margin: 0;
+  max-width: 30ch;
+  font: 300 var(--text-base) / var(--leading-body) var(--font-body);
+  color: var(--sand-dim);
+}
+
+@media (min-width: 900px) {
+  .rituals__list {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-6);
+  }
+  .rituals__head { max-width: 640px; }
+  .rituals__item:nth-child(2) { margin-top: var(--space-7); }
+  .rituals__item:nth-child(3) { margin-top: var(--space-8); }
+}

@@ -1,0 +1,12 @@
+---
+/** The Liveswarm mark: one pointer with three smaller agents splitting off it. */
+interface Props { size?: number }
+const { size = 26 } = Astro.props;
+---
+
+<svg class="mark" width={size} height={size} viewBox="0 0 28 28" aria-hidden="true" focusable="false">
+  <circle class="d1" cx="20.6" cy="5.6" r="2.7"></circle>
+  <circle class="d2" cx="24.3" cy="13.4" r="2.15"></circle>
+  <circle class="d3" cx="21.4" cy="20.6" r="1.7"></circle>
+  <path class="p" d="M4 3 L4 22.4 L9.1 17.8 L12.5 25.4 L15.7 24 L12.4 16.4 L19.3 16.2 Z"></path>
+</svg>

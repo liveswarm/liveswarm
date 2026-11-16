@@ -1,0 +1,121 @@
+.arrival {
+  background: var(--ground-2);
+  color: var(--sand);
+  padding: var(--section-pad) 0;
+  border-top: 1px solid var(--line);
+}
+
+.arrival__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-7);
+}
+
+.arrival__eyebrow {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  letter-spacing: var(--track-eyebrow);
+  text-transform: uppercase;
+  color: var(--sand-dim);
+  margin: 0 0 var(--space-5);
+}
+
+.arrival__title {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: var(--text-2xl);
+  line-height: var(--leading-display);
+  margin: 0;
+}
+
+.arrival__title em {
+  font-style: italic;
+}
+
+.arrival__copy {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--leading-body);
+  color: var(--sand-dim);
+  max-width: 34rem;
+}
+
+.arrival__copy p {
+  margin: 0 0 var(--space-5);
+}
+
+.arrival__copy p:first-child::first-line {
+  color: var(--sand);
+}
+
+.arrival__table {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--line);
+}
+
+.arrival__row:last-child .arrival__time::after {
+  content: "";
+  position: absolute;
+  top: 0.1em;
+  right: -0.35em;
+  width: 5px;
+  height: 5px;
+  border-radius: var(--radius-pill);
+  background: var(--star);
+}
+
+.arrival__row {
+  display: grid;
+  grid-template-columns: 5rem 1fr;
+  column-gap: var(--space-5);
+  row-gap: var(--space-2);
+  padding: var(--space-6) 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.arrival__time {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: var(--text-2xl);
+  line-height: 1;
+  font-variant-numeric: tabular-nums lining-nums;
+  color: var(--sand);
+  position: relative;
+  justify-self: start;
+}
+
+.arrival__what {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  letter-spacing: var(--track-eyebrow);
+  text-transform: uppercase;
+  align-self: center;
+}
+
+.arrival__note {
+  grid-column: 2;
+  font-size: var(--text-sm);
+  color: var(--sand-faint);
+}
+
+@media (min-width: 900px) {
+  .arrival__grid {
+    grid-template-columns: 5fr 6fr;
+    column-gap: var(--space-9);
+  }
+  .arrival__table {
+    grid-column: 1 / -1;
+  }
+  .arrival__row {
+    grid-template-columns: 8rem 14rem 1fr;
+    align-items: center;
+  }
+  .arrival__what {
+    align-self: center;
+  }
+  .arrival__note {
+    grid-column: auto;
+  }
+}

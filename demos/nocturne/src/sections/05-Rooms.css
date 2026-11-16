@@ -1,0 +1,43 @@
+.rooms {
+  background: var(--ground);
+  padding-block: var(--section-pad);
+  color: var(--sand);
+}
+.rooms__head { max-width: 40rem; margin-bottom: var(--space-8); }
+.rooms__eyebrow {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  letter-spacing: var(--track-eyebrow);
+  text-transform: uppercase;
+  color: var(--sand-dim);
+  margin: 0 0 var(--space-4);
+}
+.rooms__title {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: var(--text-2xl);
+  line-height: var(--leading-display);
+  margin: 0 0 var(--space-5);
+}
+.rooms__title em { font-style: italic; color: var(--sand-dim); }
+.rooms__eyebrow::after { content: ""; display: inline-block; width: var(--space-7); height: 1px; background: var(--line); vertical-align: middle; margin-left: var(--space-4); }
+.rooms__lead { font-size: var(--text-base); line-height: var(--leading-body); color: var(--sand-dim); margin: 0; max-width: 34rem; }
+.rooms__list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-8); }
+.rooms__item { display: grid; gap: var(--space-5); border-top: 1px solid var(--line); padding-top: var(--space-5); }
+.rooms__draw { width: 100%; height: auto; display: block; background: var(--ground-2); border-radius: var(--radius-sm); }
+.rooms__name { font-family: var(--font-display); font-weight: 400; font-size: var(--text-xl); margin: 0 0 var(--space-4); }
+.rooms__facts { margin: 0 0 var(--space-4); display: grid; gap: var(--space-2); }
+.rooms__facts div { display: grid; grid-template-columns: 4rem 1fr; gap: var(--space-3); }
+.rooms__facts dt { font-size: var(--text-xs); letter-spacing: var(--track-eyebrow); text-transform: uppercase; color: var(--sand-faint); padding-top: 0.2em; }
+.rooms__facts dd { margin: 0; font-size: var(--text-sm); color: var(--sand-dim); }
+.rooms__night { font-family: var(--font-display); font-style: italic; font-size: var(--text-lg); margin: 0 0 var(--space-4); }
+.rooms__price { margin: 0; font-size: var(--text-sm); color: var(--sand-dim); font-variant-numeric: tabular-nums; }
+.rooms__price { padding-top: var(--space-4); border-top: 1px solid var(--line); }
+.rooms__price span { font-variant-numeric: lining-nums tabular-nums; letter-spacing: 0.02em; }
+.rooms__price span { font-family: var(--font-display); font-size: var(--text-xl); color: var(--sand); }
+
+@media (min-width: 900px) {
+  .rooms__list { grid-template-columns: repeat(3, 1fr); gap: var(--space-6); align-items: start; }
+  .rooms__item--2 { margin-top: var(--space-8); }
+  .rooms__item--3 { margin-top: var(--space-6); }
+}

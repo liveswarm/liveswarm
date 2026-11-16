@@ -1,0 +1,13 @@
+.quotes { padding: clamp(72px, 10vw, 130px) 0; }
+.quotes__title { font-size: clamp(36px, 5.5vw, 62px); margin: 18px 0 clamp(32px, 5vw, 56px); max-width: 15em; }
+.quotes__grid { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 18px; align-items: start; }
+.quote { margin: 0; padding: 28px; border-radius: 22px; border: 1.5px solid var(--ink); background: var(--card); }
+.quote:nth-child(1) { background: var(--butter); transform: rotate(-.8deg); }
+.quote:nth-child(3) { transform: rotate(.7deg); margin-top: 22px; }
+.quote blockquote { margin: 0; font-family: var(--serif); font-size: 22px; line-height: 1.28; letter-spacing: -.01em; }
+.quote:nth-child(1) blockquote { font-size: clamp(24px, 3vw, 31px); }
+.quote figcaption { margin-top: 22px; display: flex; align-items: center; gap: 12px; font-size: 14px; }
+.quote figcaption .quote__av { width: 40px; height: 40px; font-size: 16px; border-radius: 50%; display: grid; place-items: center; font-family: var(--serif); font-weight: 600; color: var(--paper); background: var(--moss); border: 1.5px solid var(--ink); }
+.quote figcaption b { display: block; font-weight: 600; }
+.quote figcaption span { color: var(--ink-soft); font-size: 13px; }
+@media (max-width: 900px) { .quotes__grid { grid-template-columns: 1fr; } .quote:nth-child(n) { transform: none; margin-top: 0; } }

@@ -1,0 +1,12 @@
+.cta { padding: 0 0 clamp(64px, 9vw, 120px); }
+.cta__card { position: relative; overflow: hidden; border-radius: 32px; border: 1.5px solid var(--ink); background: var(--vermilion); color: #fff7ea; padding: clamp(36px, 7vw, 88px); text-align: center; }
+.cta__card::before, .cta__card::after { content: ""; position: absolute; border-radius: 50%; border: 1.5px solid rgba(255,247,234,.35); }
+.cta__card::before { width: 520px; height: 520px; left: -200px; bottom: -300px; }
+.cta__card::after { width: 340px; height: 340px; right: -120px; top: -180px; }
+.cta__title { position: relative; font-size: clamp(38px, 7vw, 84px); max-width: 12em; margin: 0 auto; }
+.cta .cta__title em { color: var(--ink); }
+.cta__sub { position: relative; margin: 20px auto 0; max-width: 30em; opacity: .92; }
+.cta__form { position: relative; margin: 34px auto 0; display: flex; gap: 10px; max-width: 460px; background: #fff7ea; padding: 6px; border-radius: 999px; border: 1.5px solid var(--ink); box-shadow: 4px 4px 0 var(--ink); }
+.cta__form input { flex: 1; min-width: 0; border: 0; background: transparent; padding: 0 16px; font: inherit; font-size: 15px; color: var(--ink); outline: none; }
+.cta__form button { border: 0; background: var(--ink); color: var(--paper); font-weight: 600; padding: 12px 20px; border-radius: 999px; font-size: 15px; }
+@media (max-width: 520px) { .cta__form { flex-direction: column; border-radius: 22px; } .cta__form input { padding: 12px 14px; } }

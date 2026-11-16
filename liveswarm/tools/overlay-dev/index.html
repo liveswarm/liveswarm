@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lumen - dev harness for the Liveswarm overlay</title>
+<style id="theme">
+  :root{--accent:#4b3df2;--accent-ink:#fff;--ink:#16151d;--muted:#6a6878;--bg:#f6f4ef;--card:#fff;--line:#e6e2d8}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1160px;margin:0 auto;padding:0 28px}
+  nav{display:flex;align-items:center;justify-content:space-between;height:68px}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:19px;letter-spacing:-.02em}
+  .logo i{width:22px;height:22px;border-radius:7px;background:conic-gradient(from 200deg,var(--accent),#ff8a5b,var(--accent))}
+  .links{display:flex;gap:28px;color:var(--muted);font-size:14.5px}
+  .btn{appearance:none;border:0;border-radius:12px;padding:11px 18px;font:600 14.5px/1 inherit;font-family:inherit;cursor:pointer;background:var(--accent);color:var(--accent-ink);box-shadow:0 8px 20px -8px var(--accent)}
+  .btn.ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
+  .hero{display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:center;padding:36px 0 44px}
+  h1{font:700 clamp(36px,5vw,58px)/1.04 ui-serif,"Iowan Old Style",Georgia,serif;letter-spacing:-.025em;margin:0 0 18px}
+  .lede{color:var(--muted);font-size:18px;max-width:30em;margin:0 0 26px}
+  .cta{display:flex;gap:12px}
+  .visual{position:relative;aspect-ratio:1.15;border-radius:26px;background:radial-gradient(120% 90% at 20% 10%,#ffd9c7,transparent 55%),radial-gradient(90% 90% at 90% 90%,#cfd0ff,transparent 60%),#efe9dd;padding:26px;display:flex;flex-direction:column;gap:14px;justify-content:center}
+  .tile{background:rgba(255,255,255,.82);border-radius:16px;padding:16px 18px;box-shadow:0 12px 30px -14px rgba(40,30,80,.25);display:flex;align-items:center;gap:14px}
+  .tile b{display:block;font-size:15px}.tile span{color:var(--muted);font-size:13px}
+  .dot{width:36px;height:36px;border-radius:11px;background:var(--accent);opacity:.9;flex:none}
+  .features{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;padding-bottom:56px}
+  .card{background:var(--card);border-radius:20px;padding:24px;box-shadow:0 0 0 1px var(--line),0 18px 40px -26px rgba(40,30,80,.3)}
+  .card h3{margin:14px 0 6px;font-size:18px;letter-spacing:-.01em}.card p{margin:0;color:var(--muted);font-size:14.5px}
+  .ico{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:color-mix(in oklab,var(--accent) 12%,white);color:var(--accent)}
+  .pricing{padding:30px 0 70px}.pricing h2{font:700 34px/1.1 ui-serif,Georgia,serif;margin:0 0 26px;letter-spacing:-.02em}
+  .plans{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .plan{background:var(--card);border-radius:22px;padding:28px;box-shadow:0 0 0 1px var(--line)}
+  .plan.pop{background:var(--ink);color:#fff}.plan .price{font:700 40px/1 ui-serif,Georgia,serif;margin:14px 0}
+  .plan ul{margin:0 0 20px;padding:0;list-style:none;color:var(--muted);font-size:14.5px;display:grid;gap:6px}.plan.pop ul{color:#c9c7d6}
+  footer{border-top:1px solid var(--line);padding:34px 0 60px;display:flex;justify-content:space-between;color:var(--muted);font-size:14px}
+  @media (max-width:760px){.hero{grid-template-columns:1fr;gap:28px}.features,.plans{grid-template-columns:1fr}.links{display:none}.wrap{padding:0 20px}}
+</style>
+<script>window.__LIVESWARM__ = {root: "/demo", conductor: "http://127.0.0.1:7799"};</script>
+<script src="../overlay.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <nav data-swarm="src/components/Nav.jsx:5-22">
+    <div class="logo" data-swarm="src/components/Nav.jsx:6-9"><i></i>Lumen</div>
+    <div class="links" data-swarm="src/components/Nav.jsx:10-14"><span>Product</span><span>Changelog</span><span>Docs</span><span>Pricing</span></div>
+    <button class="btn" id="cta-nav" data-swarm="src/components/Nav.jsx:15-20">Start free</button>
+  </nav>
+
+  <section class="hero" data-swarm="src/components/Hero.jsx:3-40">
+    <div data-swarm="src/components/Hero.jsx:4-23">
+      <h1 data-swarm="src/components/Hero.jsx:8-12" id="h1">Ship interfaces your team can feel.</h1>
+      <p class="lede" data-swarm="src/components/Hero.jsx:13-15" id="lede">Lumen turns design intent into production components, so every release lands with the polish of a launch.</p>
+      <div class="cta" data-swarm="src/components/Hero.jsx:16-22">
+        <button class="btn" id="cta-main" data-swarm-site="src/components/Hero.jsx:17-18">Get started</button>
+        <button class="btn ghost" id="cta-demo" data-swarm-site="src/components/Hero.jsx:19-21">Watch the demo</button>
+      </div>
+    </div>
+    <div class="visual" data-swarm="src/components/Hero.jsx:24-38" id="visual">
+      <div class="tile"><span class="dot"></span><div><b>Hero.jsx</b><span>Updated just now</span></div></div>
+      <div class="tile"><span class="dot" style="background:#ff8a5b"></span><div><b>Pricing.jsx</b><span>3 plans, annual toggle</span></div></div>
+      <div class="tile"><span class="dot" style="background:#1fb58f"></span><div><b>Theme</b><span>Tokens synced</span></div></div>
+    </div>
+  </section>
+
+  <section class="features" data-swarm="src/components/Features.jsx:4-50" id="features">
+    <article class="card" data-swarm="src/components/FeatureCard.jsx:3-18" data-swarm-site="src/components/Features.jsx:20-24">
+      <div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 12h16M12 4v16"/></svg></div>
+      <h3 data-swarm="src/components/FeatureCard.jsx:8-10">Live components</h3><p data-swarm="src/components/FeatureCard.jsx:11-13">Edit once, see it everywhere. Previews stay in sync with your code.</p>
+    </article>
+    <article class="card" data-swarm="src/components/FeatureCard.jsx:3-18" data-swarm-site="src/components/Features.jsx:25-29">
+      <div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8"/></svg></div>
+      <h3 data-swarm="src/components/FeatureCard.jsx:8-10">Design tokens</h3><p data-swarm="src/components/FeatureCard.jsx:11-13">One source of truth for colour, type and spacing across every surface.</p>
+    </article>
+    <article class="card" data-swarm="src/components/FeatureCard.jsx:3-18" data-swarm-site="src/components/Features.jsx:30-34">
+      <div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 19 19 5M8 5h11v11"/></svg></div>
+      <h3 data-swarm="src/components/FeatureCard.jsx:8-10">Ship faster</h3><p data-swarm="src/components/FeatureCard.jsx:11-13">Review changes as they happen and merge with confidence.</p>
+    </article>
+  </section>
+
+  <section class="pricing" data-swarm="src/components/Pricing.jsx:3-60" id="pricing">
+    <h2>Simple, honest pricing</h2>
+    <div class="plans">
+      <div class="plan" data-swarm="src/components/Pricing.jsx:10-24"><b>Starter</b><div class="price">$0</div><ul><li>3 projects</li><li>Community support</li></ul><button class="btn ghost">Choose Starter</button></div>
+      <div class="plan pop" data-swarm="src/components/Pricing.jsx:25-39"><b>Team</b><div class="price">$24</div><ul><li>Unlimited projects</li><li>Priority support</li></ul><button class="btn">Choose Team</button></div>
+      <div class="plan" data-swarm="src/components/Pricing.jsx:40-56"><b>Scale</b><div class="price">$96</div><ul><li>SSO and audit log</li><li>Dedicated manager</li></ul><button class="btn ghost">Talk to us</button></div>
+    </div>
+  </section>
+
+  <footer data-swarm="src/components/Footer.jsx:3-20"><span>Lumen Labs, 2026</span><span>Privacy &middot; Terms &middot; Status</span></footer>
+</div>
+<script>
+  window.__clicks = 0;
+  document.getElementById('cta-main').addEventListener('click', function () { window.__clicks++; this.textContent = 'Clicked ' + window.__clicks; });
+  if (location.search.indexOf('scenario') >= 0) { var s = document.createElement('script'); s.src = 'scenario.js'; document.body.appendChild(s); }
+</script>
+</body>
+</html>

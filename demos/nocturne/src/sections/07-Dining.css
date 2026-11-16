@@ -1,0 +1,145 @@
+.dining {
+  position: relative;
+  background: var(--ground);
+  padding-block: var(--section-pad);
+  color: var(--sand);
+  overflow: hidden;
+}
+
+.dining::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 70%;
+  background: radial-gradient(ellipse 55% 100% at 62% 100%, var(--ember-soft), transparent 72%);
+  mask-image: linear-gradient(to top, transparent, #000 40%);
+  pointer-events: none;
+}
+
+.dining__wrap {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-8);
+  align-items: start;
+}
+
+@media (min-width: 900px) {
+  .dining__wrap {
+    grid-template-columns: 5fr 6fr;
+    gap: var(--space-9);
+  }
+}
+
+.dining__flame {
+  display: block;
+  margin-bottom: var(--space-5);
+}
+
+.dining__eyebrow {
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--track-eyebrow);
+  color: var(--sand-dim);
+  margin: 0 0 var(--space-5);
+}
+
+.dining__title {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: var(--text-2xl);
+  line-height: var(--leading-display);
+  letter-spacing: -0.01em;
+  margin: 0 0 var(--space-6);
+}
+
+.dining__title em {
+  font-style: italic;
+  color: var(--sand-dim);
+}
+
+.dining__lead {
+  font-size: var(--text-lg);
+  line-height: var(--leading-body);
+  color: var(--sand);
+  max-width: 34ch;
+  margin: 0 0 var(--space-5);
+}
+
+.dining__intro {
+  padding-top: var(--space-4);
+}
+
+.dining__small {
+  max-width: 44ch;
+  line-height: var(--leading-body);
+  font-size: var(--text-sm);
+  color: var(--sand-faint);
+  margin: 0;
+}
+
+.dining__card {
+  background: var(--ground-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: var(--space-7) var(--space-6);
+}
+
+@media (min-width: 900px) {
+  .dining__card {
+    padding: var(--space-8) var(--space-7);
+    margin-top: var(--space-8);
+  }
+}
+
+.dining__card-head,
+.dining__card-foot {
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--track-eyebrow);
+  color: var(--sand-dim);
+  margin: 0;
+}
+
+.dining__list {
+  list-style: none;
+  margin: var(--space-6) 0;
+  padding: 0;
+}
+
+.dining__course {
+  display: grid;
+  grid-template-columns: 2.5rem 1fr;
+  padding-block: var(--space-4);
+  border-top: 1px solid var(--line);
+}
+
+.dining__num {
+  font-family: var(--font-display);
+  font-style: italic;
+  color: var(--sand-faint);
+}
+
+.dining__name {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--text-xl);
+  line-height: 1.15;
+  margin: 0 0 var(--space-1);
+}
+
+.dining__note {
+  font-size: var(--text-sm);
+  color: var(--sand-dim);
+  margin: 0;
+}
+
+.dining__card-foot {
+  border-top: 1px solid var(--line);
+  padding-top: var(--space-5);
+  font-variant-numeric: tabular-nums;
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+}

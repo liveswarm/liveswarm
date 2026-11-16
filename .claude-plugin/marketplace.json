@@ -1,0 +1,24 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "liveswarm",
+  "description": "Liveswarm: watch Claude Code build your app as a swarm of live cursors.",
+  "owner": {
+    "name": "Liveswarm"
+  },
+  "plugins": [
+    {
+      "name": "liveswarm",
+      "source": "./liveswarm/plugin",
+      "description": "Every Claude Code agent appears as a named cursor on your live app preview. Free, open source, no model calls.",
+      "version": "0.2.0",
+      "license": "MIT",
+      "keywords": [
+        "cursors",
+        "subagents",
+        "preview",
+        "visualization",
+        "recording"
+      ]
+    }
+  ]
+}

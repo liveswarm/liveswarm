@@ -1,0 +1,44 @@
+/* Stage scaffolding: gives every empty slot a height so the layout exists.
+   Sections own their own CSS; these are min-heights only, content may grow past them. */
+.hero { position: relative; min-height: 100vh; isolation: isolate; overflow: hidden; background: var(--ground); }
+.hero > .sky { position: absolute; inset: 0; z-index: 0; }
+.hero > .hero-title { position: relative; z-index: 1; min-height: 100vh; }
+:where(nav#nav) { min-height: 72px; }
+:where(#arrival) { min-height: 80vh; }
+:where(#rooms) { min-height: 90vh; }
+:where(#stars) { min-height: 90vh; }
+:where(#dining) { min-height: 80vh; }
+:where(#rituals) { min-height: 80vh; }
+:where(#drive) { min-height: 80vh; }
+:where(#notes) { min-height: 70vh; }
+:where(#booking) { min-height: 80vh; }
+:where(footer#footer) { min-height: 40vh; }
+
+/* Empty-stage blueprint. Each slot shows a faint hairline and its label only while it is still
+   empty (:empty stops matching the moment its agent puts content in), so the film opens on a dark
+   page with twelve quiet placeholders that the swarm then fills. */
+:is(#nav, #hero-title, #arrival, #rooms, #stars, #dining, #rituals, #drive, #notes, #booking, #footer):empty {
+  border-top: 1px solid var(--line);
+  margin-inline: var(--gutter);
+}
+:is(#nav, #hero-title, #arrival, #rooms, #stars, #dining, #rituals, #drive, #notes, #booking, #footer):empty::before {
+  display: block;
+  padding-top: var(--space-4);
+  font: 500 var(--text-xs) / 1 var(--font-body);
+  letter-spacing: var(--track-eyebrow);
+  text-transform: uppercase;
+  color: var(--sand-faint);
+  opacity: 0.55;
+}
+#nav:empty::before { content: "01 · Nav"; }
+#hero-title:empty { border-top: 0; display: grid; place-items: center; }
+#hero-title:empty::before { content: "02 · Night sky   ·   03 · Hero"; padding: 0; opacity: 0.4; }
+#arrival:empty::before { content: "04 · Arrival"; }
+#rooms:empty::before { content: "05 · Rooms"; }
+#stars:empty::before { content: "06 · Star program"; }
+#dining:empty::before { content: "07 · Dining"; }
+#rituals:empty::before { content: "08 · Rituals"; }
+#drive:empty::before { content: "09 · The drive"; }
+#notes:empty::before { content: "10 · Field notes"; }
+#booking:empty::before { content: "11 · Booking"; }
+#footer:empty::before { content: "12 · Footer"; }

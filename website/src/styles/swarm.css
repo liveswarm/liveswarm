@@ -1,0 +1,437 @@
+/*
+  The cursor layer. Its look follows the real Liveswarm overlay (pointer shape, name pills,
+  chips, terminal pill, corner counter) so screenshots of the site and of the product match.
+  It uses system fonts on purpose: the overlay does too, on top of whatever app it runs over.
+  Colour: every agent has one hue (--h); the pointer is the light tone, the pill the deep tone.
+*/
+
+.lsw-cur {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  font: 500 12px/1.2 ui-sans-serif, system-ui, -apple-system, 'SF Pro Text', 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  letter-spacing: normal;
+  text-align: left;
+  text-transform: none;
+  color: #fff;
+  will-change: transform;
+}
+.lsw-fx0 {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform-origin: 0 0;
+}
+.lsw-drift {
+  position: absolute;
+  left: 0;
+  top: 0;
+  animation: lsw-drift var(--dd, 7s) ease-in-out var(--dl, 0s) infinite;
+}
+@keyframes lsw-drift {
+  0%, 100% { transform: translate(0, 0); }
+  30% { transform: translate(2.4px, -2px); }
+  62% { transform: translate(-1.8px, 2.4px); }
+}
+.lsw-ptr {
+  position: absolute;
+  left: -1.5px;
+  top: -1.5px;
+  width: 22px;
+  height: 26px;
+  overflow: visible;
+  transform-origin: 2px 2px;
+  filter: drop-shadow(0 1px 1px rgba(12, 10, 30, 0.22)) drop-shadow(0 5px 9px rgba(12, 10, 30, 0.2));
+}
+.lsw-ptr path {
+  fill: oklch(0.71 0.19 var(--h));
+  stroke: #fff;
+  stroke-width: 1.6;
+  stroke-linejoin: round;
+}
+.lsw-stack {
+  position: absolute;
+  left: 14px;
+  top: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  white-space: nowrap;
+}
+.lsw-cur.fx-x .lsw-stack {
+  left: auto;
+  right: 14px;
+  align-items: flex-end;
+}
+.lsw-cur.fx-y .lsw-stack {
+  top: auto;
+  bottom: 18px;
+  flex-direction: column-reverse;
+}
+.lsw-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 22px;
+  padding: 0 10px 0 8px;
+  border-radius: 11px;
+  background: oklch(0.5 0.17 var(--h));
+  color: #fff;
+  font-weight: 600;
+  font-size: 11.5px;
+  letter-spacing: 0.006em;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.5), 0 6px 14px -2px rgba(10, 10, 30, 0.28), 0 1px 2px rgba(10, 10, 30, 0.3);
+  transform-origin: 0 0;
+}
+.lsw-pill .pd {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  flex: none;
+}
+.lsw-cur.working .pd {
+  animation: lsw-pulse 1s ease-in-out infinite;
+}
+.lsw-pill .ar {
+  display: none;
+  margin-left: -1px;
+  opacity: 0.85;
+}
+.lsw-cur.parked .lsw-pill .ar {
+  display: inline;
+}
+@keyframes lsw-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(0.7); }
+}
+
+/* Terminal pill (a command an agent runs) */
+.lsw-term {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 24px;
+  padding: 0 11px 0 9px;
+  border-radius: 8px;
+  background: rgba(13, 14, 20, 0.92);
+  color: #e9ebf2;
+  font: 500 11px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1), 0 8px 20px -4px rgba(8, 8, 20, 0.4);
+}
+.lsw-term .st {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #8b91a1;
+  flex: none;
+  transition: background 0.2s;
+}
+.lsw-term.run .st {
+  background: #e9b44c;
+  animation: lsw-pulse 0.9s ease-in-out infinite;
+}
+.lsw-term.ok .st {
+  background: #3ddc97;
+}
+.lsw-term.ok {
+  box-shadow: 0 0 0 1px rgba(61, 220, 151, 0.55), 0 8px 24px -4px rgba(61, 220, 151, 0.35);
+}
+
+/* Chips (what just changed) */
+.lsw-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 26px;
+  padding: 0 12px 0 10px;
+  border-radius: 13px;
+  background: rgba(15, 16, 23, 0.9);
+  color: #f3f4f8;
+  font: 600 12px/1 ui-sans-serif, system-ui, -apple-system, 'SF Pro Text', 'Segoe UI', Roboto, sans-serif;
+  white-space: nowrap;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1), 0 10px 26px -6px rgba(8, 8, 20, 0.45), 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+.lsw-chip .sw {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: oklch(0.71 0.19 var(--h));
+  box-shadow: 0 0 8px oklch(0.71 0.19 var(--h));
+  flex: none;
+}
+.lsw-chip .add,
+.lsw-chip .del {
+  font: 600 11.5px ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-variant-numeric: tabular-nums;
+}
+.lsw-chip .add { color: #6ee7a8; }
+.lsw-chip .del { color: #ff8f9b; }
+.lsw-chip .meta {
+  color: rgba(255, 255, 255, 0.55);
+  font-weight: 500;
+}
+.lsw-chip.dim {
+  height: 22px;
+  padding: 0 10px 0 8px;
+  background: rgba(22, 23, 31, 0.74);
+  color: rgba(255, 255, 255, 0.82);
+  font-weight: 500;
+  font-size: 11.5px;
+}
+
+/* ---- Everything below exists only while the build plays ---- */
+
+.lsw-root {
+  pointer-events: none;
+}
+.lsw-doc {
+  position: absolute;
+  inset: 0;
+  overflow: clip;
+  pointer-events: none;
+  z-index: 60;
+}
+.lsw-edge,
+.lsw-trail,
+.lsw-teth {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 61;
+}
+.lsw-trail,
+.lsw-teth {
+  z-index: 59;
+}
+.lsw-fxl {
+  position: absolute;
+  inset: 0;
+}
+.lsw-doc .lsw-chip {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.lsw-sel {
+  position: absolute;
+  border-radius: 4px;
+  background: oklch(0.71 0.19 var(--h) / 0.2);
+  box-shadow: inset 0 0 0 1px oklch(0.71 0.19 var(--h) / 0.6), 0 0 24px oklch(0.71 0.19 var(--h) / 0.22);
+}
+.lsw-ghost {
+  position: absolute;
+  border-radius: 12px;
+  border: 1.5px dashed oklch(0.66 0.19 var(--h));
+  background: oklch(0.71 0.19 var(--h) / 0.07);
+}
+.lsw-ghost .tab {
+  position: absolute;
+  left: 10px;
+  top: -1px;
+  transform: translateY(-100%);
+  padding: 3px 8px 4px;
+  border-radius: 6px 6px 0 0;
+  background: oklch(0.5 0.17 var(--h));
+  color: #fff;
+  font: 600 10.5px/1 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  white-space: nowrap;
+}
+.lsw-ghost.low .tab {
+  top: auto;
+  bottom: -1px;
+  transform: translateY(100%);
+  border-radius: 0 0 6px 6px;
+}
+.lsw-paint {
+  position: absolute;
+  overflow: hidden;
+  border-radius: 12px;
+}
+.lsw-paint .tint {
+  position: absolute;
+  inset: 0;
+  background: oklch(0.71 0.19 var(--h) / 0.06);
+}
+.lsw-paint .band {
+  position: absolute;
+  left: 0;
+  top: -10%;
+  width: 46%;
+  height: 120%;
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    oklch(0.71 0.19 var(--h) / 0) 8%,
+    oklch(0.71 0.19 var(--h) / 0.22) 55%,
+    oklch(0.71 0.19 var(--h) / 0.34) 62%,
+    transparent 100%
+  );
+}
+.lsw-rip {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  margin: -22px 0 0 -22px;
+  border-radius: 50%;
+  border: 1.5px solid oklch(0.71 0.19 var(--h));
+}
+.lsw-rest {
+  visibility: hidden;
+}
+
+/* Corner counter and the Skip control */
+.lsw-ui {
+  position: fixed;
+  left: 14px;
+  bottom: 14px;
+  z-index: 70;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.lsw-ui.gone {
+  opacity: 0;
+  transform: translateY(8px);
+}
+.lsw-hud {
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 30px;
+  padding: 0 14px 0 12px;
+  border-radius: 15px;
+  background: rgba(15, 16, 23, 0.86);
+  backdrop-filter: blur(14px) saturate(1.5);
+  -webkit-backdrop-filter: blur(14px) saturate(1.5);
+  color: rgba(255, 255, 255, 0.88);
+  font: 550 11.5px/1 ui-sans-serif, system-ui, -apple-system, 'SF Pro Text', 'Segoe UI', Roboto, sans-serif;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.09), 0 12px 30px -8px rgba(8, 8, 20, 0.5);
+}
+.lsw-hud .cd {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #7b8091;
+  flex: none;
+}
+.lsw-hud.live .cd {
+  background: #3ddc97;
+  animation: lsw-live 2.4s ease-out infinite;
+}
+@keyframes lsw-live {
+  0% { box-shadow: 0 0 0 0 rgba(61, 220, 151, 0.5); }
+  70%, 100% { box-shadow: 0 0 0 7px rgba(61, 220, 151, 0); }
+}
+.lsw-hud .sep {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.28);
+}
+.lsw-hud .sws {
+  display: inline-flex;
+}
+.lsw-hud .sws i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  margin-left: -3px;
+  background: oklch(0.71 0.19 var(--h));
+  box-shadow: 0 0 0 1.5px rgba(15, 16, 23, 1);
+}
+.lsw-hud .sws i:first-child {
+  margin-left: 0;
+}
+.lsw-hud .m {
+  color: rgba(255, 255, 255, 0.55);
+  font-weight: 500;
+}
+.lsw-skip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 30px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 15px;
+  background: var(--surface);
+  color: var(--ink);
+  font: 600 12.5px/1 var(--font-body);
+  cursor: pointer;
+  box-shadow: 0 0 0 1px var(--line-strong), 0 10px 24px -10px rgba(8, 8, 20, 0.45);
+}
+.lsw-skip:hover {
+  background: var(--paper-2);
+}
+.lsw-skip kbd {
+  font: 500 10.5px/1 var(--font-mono);
+  color: var(--muted);
+  padding: 3px 5px;
+  border-radius: 5px;
+  box-shadow: inset 0 0 0 1px var(--line-strong);
+}
+@media (hover: none) {
+  .lsw-skip kbd { display: none; }
+}
+@media (max-width: 420px) {
+  .lsw-hud { gap: 7px; padding: 0 11px 0 10px; font-size: 11px; }
+  .lsw-hud .sws { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lsw-static .lsw-drift { animation: none; }
+}
+
+
+/* Light: in the hero, each agent lights the blueprint grid under it, in its own colour. */
+.lsw-lights {
+  position: absolute;
+  inset: -68px 0 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  transition: opacity 0.7s ease;
+}
+.lsw-lights.out { opacity: 0; }
+.lsw-light {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--ls, 440px);
+  height: var(--ls, 440px);
+  border-radius: 50%;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.7s ease;
+  will-change: transform, opacity;
+  background: radial-gradient(closest-side, oklch(0.71 0.19 var(--h) / 0.13), transparent 82%);
+  -webkit-mask-image: radial-gradient(closest-side, #000 0%, rgba(0, 0, 0, 0.42) 46%, transparent 100%);
+  mask-image: radial-gradient(closest-side, #000 0%, rgba(0, 0, 0, 0.42) 46%, transparent 100%);
+}
+.lsw-light.on { opacity: 1; }
+.lsw-light i {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: calc(var(--ls, 440px) + 56px);
+  height: calc(var(--ls, 440px) + 56px);
+  will-change: transform;
+  background-image:
+    linear-gradient(to right, oklch(0.8 0.15 var(--h) / 0.5) 1px, transparent 1px),
+    linear-gradient(to bottom, oklch(0.8 0.15 var(--h) / 0.5) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+.lsw-skip { background: #111114; color: var(--ink); box-shadow: 0 0 0 1px var(--line-strong), 0 10px 24px -10px #000; }
+.lsw-skip:hover { background: #1b1b20; }

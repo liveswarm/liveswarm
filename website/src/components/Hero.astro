@@ -1,0 +1,45 @@
+---
+import Cursor from './Cursor.astro';
+import InstallCommand from './InstallCommand.astro';
+import Benefits from './Benefits.astro';
+import { site } from '../config';
+
+const mailBody = `Install Liveswarm when you are back at your computer:\n\n${site.install}\n\n${site.url}`;
+const mailto = `mailto:?subject=${encodeURIComponent('Liveswarm install link')}&body=${encodeURIComponent(mailBody)}`;
+---
+
+<section class="hero" id="hero" data-scene data-paint aria-labelledby="hero-title">
+  <div class="wrap">
+    <h1 id="hero-title">
+      <span class="l">Watch your AI</span>
+      <span class="l l2">build it.<Cursor label="main" hue={268} class="home-cursor" /></span>
+    </h1>
+    <p class="hero-sub" id="hero-sub">
+      Every agent becomes a cursor on your screen. Watch them split up the work, land on what
+      they’re changing, and put your app together in front of you.
+    </p>
+
+    <InstallCommand id="hero-install" where="hero" />
+
+    <div class="hero-actions" id="hero-actions" data-b>
+      <a class="btn star" href={site.repoUrl} data-track="github_click" data-where="hero">
+        <svg data-paint width="17" height="17" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 .9l2.1 4.5 4.9.6-3.6 3.4.9 4.9L8 11.9l-4.3 2.4.9-4.9L1 6l4.9-.6z"></path></svg>
+        Star on GitHub
+        <span class="star-count" data-stars hidden></span>
+      </a>
+      <span class="works">Works with Claude Code · Codex soon</span>
+      <a class="mail-me" href={mailto}>Email me the link</a>
+    </div>
+
+    <p class="proof" id="hero-proof" data-b="type">Every cursor is a real agent. Every move is a real edit.</p>
+
+    <Benefits />
+
+
+    <p class="hero-caption" id="hero-caption">
+      <span>A scripted preview of how Liveswarm looks while agents build.</span>
+      <button type="button" class="replay" data-replay hidden>Replay ↺</button>
+      <a href="#demo">See a real run</a>
+    </p>
+  </div>
+</section>

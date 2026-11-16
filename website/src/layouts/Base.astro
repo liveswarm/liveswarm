@@ -1,0 +1,76 @@
+---
+import '../styles/global.css';
+import '../styles/swarm.css';
+import { site } from '../config';
+
+interface Props {
+  title?: string;
+  description?: string;
+  noindex?: boolean;
+  bare?: boolean;
+}
+const { title = site.title, description = site.description, noindex = false, bare = false } = Astro.props;
+const canonical = new URL(Astro.url.pathname, site.url).href;
+const ogImage = new URL('/og.png', site.url).href;
+---
+
+<!doctype html>
+<html lang="en" data-nobuild={bare ? '' : undefined}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#050506" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="The Liveswarm headline, Watch your AI build it, with named agent cursors building the page around it." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <link rel="preload" href="/fonts/funnel-display.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/funnel-sans.woff2" as="font" type="font/woff2" crossorigin />
+
+    {/* Runs before first paint. Sets the theme, and arms the build only when it can play:
+        JavaScript on, motion allowed, and the page opened at the top. If the player never
+        starts, the timer puts the finished page back. */}
+    <script is:inline>
+      (function () {
+        var d = document.documentElement;
+        d.classList.add('js');
+        try {
+          var calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+          var able = window.CSS && CSS.supports && CSS.supports('color', 'oklch(0.5 0.1 100)') && 'IntersectionObserver' in window && 'animate' in d;
+          var off = /[?&]nobuild\b/.test(location.search) || d.hasAttribute('data-nobuild');
+          if (calm) d.classList.add('calm');
+          if (!calm && able && !off) {
+            d.classList.add('build');
+            /* A tab opened in the background has not started yet, so it is not a failure: wait until it is seen. */
+            (function arm() {
+              window.__lswFailsafe = setTimeout(function () {
+                if (document.hidden) document.addEventListener('visibilitychange', arm, { once: true });
+                else d.classList.remove('build');
+              }, 4000);
+            })();
+          }
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body class:list={{ bare }}>
+    <slot />
+  </body>
+</html>

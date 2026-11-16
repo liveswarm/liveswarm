@@ -1,0 +1,25 @@
+---
+import InstallCommand from './InstallCommand.astro';
+import Mark from './Mark.astro';
+import { site } from '../config';
+---
+
+<section class="band get ink" id="get" data-scene aria-labelledby="get-title">
+  <div class="wrap">
+    <div class="get-mark" aria-hidden="true">
+      <Mark size={104} />
+    </div>
+    <h2 id="get-title" data-b="type">Stop waiting. Start watching.</h2>
+    <div id="get-cta" data-b>
+      <InstallCommand id="get-install" where="final" />
+    </div>
+    <form class="email" id="get-email" method="post" data-email data-endpoint={site.emailEndpoint} data-b>
+      <label for="email-input">Get Codex, video and stream support first.</label>
+      <div class="email-row">
+        <input id="email-input" name="email" type="email" required autocomplete="email" inputmode="email" placeholder="you@example.com" />
+        <button type="submit" class="btn btn-brand">Notify me</button>
+      </div>
+      <p class="email-status" data-email-status role="status" aria-live="polite"></p>
+    </form>
+  </div>
+</section>

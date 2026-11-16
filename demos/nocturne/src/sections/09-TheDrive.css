@@ -1,0 +1,112 @@
+.drive {
+  background: var(--ground);
+  color: var(--sand);
+  padding-block: var(--section-pad);
+}
+
+.drive__inner {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  column-gap: var(--space-6);
+  row-gap: var(--space-7);
+}
+
+.drive__head { grid-column: 1 / span 5; }
+.drive__map { grid-column: 6 / -1; grid-row: 1; margin: 0; align-self: center; }
+.drive__legs { grid-column: 1 / span 5; grid-row: 2; }
+.drive__bring { grid-column: 6 / -1; grid-row: 2; align-self: start; }
+
+.drive__eyebrow {
+  font-size: var(--text-xs);
+  letter-spacing: var(--track-eyebrow);
+  text-transform: uppercase;
+  color: var(--sand-dim);
+  margin: 0 0 var(--space-5);
+}
+
+.drive__title {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: var(--text-2xl);
+  line-height: var(--leading-display);
+  margin: 0 0 var(--space-5);
+}
+
+.drive__title em { font-style: italic; color: var(--sand-dim); }
+
+.drive__lede {
+  font-size: var(--text-lg);
+  line-height: var(--leading-body);
+  color: var(--sand-dim);
+  max-width: 34ch;
+  margin: 0;
+}
+
+.drive__svg { width: 100%; height: auto; display: block; }
+.drive__dune { fill: var(--dune-deep); }
+.drive__dune--near { fill: var(--dune); opacity: 0.6; }
+.drive__ridge { fill: none; stroke: var(--sand); stroke-width: 1; opacity: 0.6; }
+.drive__road { fill: none; stroke: var(--sand-dim); stroke-width: 1.5; stroke-dasharray: 2 6; stroke-linecap: round; }
+.drive__gravel { fill: none; stroke: var(--sand); stroke-width: 1; opacity: 0.6; }
+.drive__pins circle { fill: var(--ground); stroke: var(--sand); stroke-width: 1; }
+.drive__pins .drive__home { fill: var(--ember); stroke: none; }
+.drive__stars circle:nth-child(odd) { opacity: 0.45; }
+.drive__tags text { fill: var(--sand-dim); font-family: var(--font-body); font-size: 12px; letter-spacing: 0.08em; }
+.drive__stars circle { fill: var(--star); opacity: 0.7; }
+
+.drive__caption {
+  font-size: var(--text-xs);
+  color: var(--sand-faint);
+  margin-top: var(--space-3);
+}
+
+.drive__legs { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); align-self: start; }
+.drive__leg:last-child .drive__name { color: var(--star); }
+
+.drive__leg {
+  display: grid;
+  grid-template-columns: 3.5rem 1fr auto;
+  column-gap: var(--space-4);
+  padding-block: var(--space-4);
+  border-bottom: 1px solid var(--line);
+  align-items: baseline;
+}
+
+.drive__time, .drive__km {
+  font-variant-numeric: tabular-nums;
+  font-size: var(--text-sm);
+  color: var(--sand-dim);
+}
+
+.drive__name { font-family: var(--font-display); font-size: var(--text-xl); line-height: 1.1; }
+.drive__note { grid-column: 2; font-size: var(--text-sm); color: var(--sand-faint); }
+.drive__km { grid-row: 1; grid-column: 3; }
+
+.drive__bring { padding-top: var(--space-5); border-top: 1px solid var(--line); }
+
+.drive__bring-title {
+  font-size: var(--text-xs);
+  letter-spacing: var(--track-eyebrow);
+  text-transform: uppercase;
+  font-family: var(--font-body);
+  font-weight: 500;
+  color: var(--sand-dim);
+  margin: 0 0 var(--space-4);
+}
+
+.drive__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  columns: 2;
+  column-gap: var(--space-6);
+  font-size: var(--text-base);
+  line-height: var(--leading-body);
+}
+
+.drive__list li { break-inside: avoid; margin-bottom: var(--space-3); }
+
+@media (max-width: 860px) {
+  .drive__head, .drive__map, .drive__legs, .drive__bring { grid-column: 1 / -1; grid-row: auto; }
+  .drive__list { columns: 1; }
+}

@@ -1,0 +1,35 @@
+.sky {
+  overflow: hidden;
+  pointer-events: none;
+  background: linear-gradient(to bottom, var(--sky-top), var(--ground) 70%);
+}
+
+.sky__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  background: var(--ground);
+  opacity: 0;
+  transition: opacity var(--dur-reveal) var(--ease-out);
+}
+
+.sky__canvas--live {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sky__canvas {
+    transition: none;
+  }
+}
+
+/* seam: the sky settles into the ground colour so the next section starts clean */
+.sky::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 1px;
+  background: var(--ground);
+}

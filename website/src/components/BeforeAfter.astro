@@ -1,0 +1,75 @@
+---
+import Cursor from './Cursor.astro';
+const prompt = 'Build a landing page for my coffee cart';
+---
+
+<section class="band ba" id="before-after" data-scene aria-labelledby="ba-title">
+  <div class="wrap">
+    <h2 id="ba-title" data-b="type">Prompts used to disappear. Now you can watch.</h2>
+    <div class="ba-grid" id="ba-panels">
+      <figure class="ba-card" data-b="drop">
+        <figcaption>Before</figcaption>
+        <p class="prompt"><span aria-hidden="true">›</span> {prompt}</p>
+        <div class="stage">
+          <div class="cc cc-blank">
+            <div class="cc-bar" aria-hidden="true"><i></i><i></i><i></i><span>localhost:5173</span></div>
+            <div class="cc-wait">
+              <span class="spinner" aria-hidden="true"></span>
+              <span>waiting…</span>
+            </div>
+          </div>
+        </div>
+      </figure>
+      <figure class="ba-card" data-b="drop">
+        <figcaption>With Liveswarm</figcaption>
+        <p class="prompt"><span aria-hidden="true">›</span> {prompt}</p>
+        <div class="stage stage-live" data-loop role="img" aria-label="A small coffee cart website taking shape while four named agent cursors build its header, headline, menu and footer.">
+          <div class="cc" aria-hidden="true">
+            <div class="cc-bar"><i></i><i></i><i></i><span>localhost:5173</span></div>
+            <div class="cc-page">
+              <div class="cc-part cc-nav"><b>Daily Grind</b><span>Menu</span><span>Find us</span><span>Hours</span></div>
+              <div class="cc-hero">
+                <div class="cc-copy">
+                  <div class="cc-part cc-h"><b>Coffee that comes to you.</b></div>
+                  <div class="cc-part cc-sub"><span>A small cart with big espresso. On Main Street, seven to two.</span></div>
+                  <div class="cc-part cc-btn"><span>Find the cart</span></div>
+                </div>
+                <div class="cc-part cc-art">
+                  <svg viewBox="0 0 120 96" focusable="false">
+                    <g fill="none" stroke="#2a211b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M30 34v22M90 34v22"></path>
+                      <path d="M22 80h76"></path>
+                      <path d="M98 62h10l4-6"></path>
+                    </g>
+                    <path d="M18 18h84l6 14a7 7 0 0 1-14 0 7 7 0 0 1-14 0 7 7 0 0 1-14 0 7 7 0 0 1-14 0 7 7 0 0 1-14 0 7 7 0 0 1-14 0 7 7 0 0 1-14 0z" fill="#d9482b"></path>
+                    <path d="M32 18h14v14a7 7 0 0 1-14 0zM60 18h14v14a7 7 0 0 1-14 0zM88 18h14l6 14a7 7 0 0 1-14 0z" fill="#fff6e6" opacity=".92"></path>
+                    <rect x="22" y="54" width="76" height="26" rx="4" fill="#2a211b"></rect>
+                    <rect x="28" y="60" width="40" height="14" rx="2.5" fill="#f6efe3"></rect>
+                    <path d="M34 67h28M34 70.5h18" stroke="#2a211b" stroke-width="1.6" stroke-linecap="round"></path>
+                    <path d="M76 61h10v7a5 5 0 0 1-10 0z" fill="#f6efe3"></path>
+                    <path d="M86 63h2a2.4 2.4 0 0 1 0 4.8h-2" fill="none" stroke="#f6efe3" stroke-width="1.6"></path>
+                    <path d="M79 50c-1.6-2 1.6-3 0-5M84 50c-1.6-2 1.6-3 0-5" fill="none" stroke="#2a211b" stroke-width="1.5" stroke-linecap="round" opacity=".55"></path>
+                    <circle cx="38" cy="84" r="8" fill="#2a211b"></circle>
+                    <circle cx="38" cy="84" r="3" fill="#f6efe3"></circle>
+                    <circle cx="82" cy="84" r="8" fill="#2a211b"></circle>
+                    <circle cx="82" cy="84" r="3" fill="#f6efe3"></circle>
+                  </svg>
+                </div>
+              </div>
+              <div class="cc-menu">
+                <div class="cc-part cc-item c1"><b>Espresso</b><span>Short and bright</span></div>
+                <div class="cc-part cc-item c2"><b>Flat white</b><span>Silky double shot</span></div>
+                <div class="cc-part cc-item c3"><b>Cold brew</b><span>Steeped overnight</span></div>
+              </div>
+              <div class="cc-part cc-foot"><span>Daily Grind Coffee Cart</span><span>Main St and 5th</span></div>
+            </div>
+          </div>
+          <Cursor label="main" hue={268} class="mc mc-main" />
+          <Cursor label="Hero" hue={24} class="mc mc-a" />
+          <Cursor label="Menu" hue={176} class="mc mc-b" />
+          <Cursor label="Header" hue={84} class="mc mc-c" />
+        </div>
+      </figure>
+    </div>
+  </div>
+</section>

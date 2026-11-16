@@ -1,0 +1,90 @@
+---
+/**
+ * The real recorded run ("Nocturne"). Idle, the player shows a short silent loop of the swarm
+ * splitting; one click plays the whole 69-second cut with controls. Phones get the tall cut.
+ * Files, numbers and the label all come from `demo` in src/config.ts.
+ */
+import { site } from '../config';
+const d = site.demo;
+const list = (a: readonly string[]) => a.join(',');
+---
+
+<section class="band demo ink" id="demo" data-scene aria-labelledby="demo-title">
+  <div class="wrap">
+    <div class="demo-head">
+      <h2 id="demo-title" data-b="type">Real run, real agents.</h2>
+      <p class="lead" data-b>
+        One Claude Code session, filmed. The main agent hands a hotel page called Nocturne to
+        twelve subagents, and they build it from a black screen. The hotel is invented. The
+        session is not.
+      </p>
+    </div>
+
+    <div
+      class="demo-player"
+      id="demo-player"
+      data-b="wipe"
+      data-demo
+      data-wide-loop={list(d.wide.loop)}
+      data-wide-full={list(d.wide.full)}
+      data-wide-poster={d.wide.poster}
+      data-tall-loop={list(d.tall.loop)}
+      data-tall-full={list(d.tall.full)}
+      data-tall-poster={d.tall.poster}
+    >
+      <video
+        id="demo-video"
+        controls
+        muted
+        playsinline
+        preload="none"
+        width={d.wide.width}
+        height={d.wide.height}
+        aria-label={`Screen recording, sped up: ${d.summary}`}
+      >
+        {d.wide.full.map((src) => <source src={src} type={src.endsWith('.webm') ? 'video/webm' : 'video/mp4'} />)}
+      </video>
+      <p class="demo-label">
+        <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M1.5 3.6v8.8a.6.6 0 0 0 .94.5L8 9.1v3.3a.6.6 0 0 0 .94.5l6.3-4.4a.6.6 0 0 0 0-1L8.94 3.1a.6.6 0 0 0-.94.5v3.3L2.44 3.1a.6.6 0 0 0-.94.5z"></path></svg>
+        {d.label}
+      </p>
+      <button type="button" class="play" data-video-play hidden>
+        <span class="play-pill">
+          <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 5.2v13.6a1 1 0 0 0 1.5.86l11.3-6.8a1 1 0 0 0 0-1.72L9.5 4.34A1 1 0 0 0 8 5.2z"></path></svg>
+          <span data-play-label>Watch the full run</span>
+          <span class="play-len">{d.length}</span>
+        </span>
+      </button>
+    </div>
+
+    <div class="demo-under" id="demo-under">
+      <ol class="reel" id="demo-reel" data-b aria-label="Parts of the recording">
+        {d.parts.map((p) => (
+          <li style={`--w:${p.to - p.at}`}>
+            <button type="button" data-seek={p.at} data-until={p.to}>
+              <span class="reel-bar" aria-hidden="true"><i></i></span>
+              <span class="reel-t">{p.time}</span>
+              <b>{p.title}</b>
+              <span class="reel-s">{p.speed}</span>
+            </button>
+          </li>
+        ))}
+      </ol>
+      <div class="demo-facts" data-b>
+        <dl class="tally">
+          {d.tally.map((t) => (
+            <div>
+              <dt>{t.label}</dt>
+              <dd>{t.value}</dd>
+            </div>
+          ))}
+        </dl>
+        <ul class="cast" aria-label="The thirteen agents in the recording">
+          {d.cast.map((c) => (
+            <li class="lsw-pill" style={`--h:${c.hue}`}><i class="pd"></i>{c.label}</li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>

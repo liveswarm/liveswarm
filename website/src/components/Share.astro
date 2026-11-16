@@ -1,0 +1,40 @@
+---
+import Mark from './Mark.astro';
+import { site } from '../config';
+const clip = site.demo.share;
+---
+
+<section class="band share" id="share" data-scene aria-labelledby="share-title">
+  <div class="wrap share-grid">
+    <figure class="phone" id="share-phone" data-b="drop">
+      <div class="phone-screen">
+        <video
+          muted
+          loop
+          playsinline
+          preload="none"
+          width="720"
+          height="1280"
+          data-loop-video
+          data-src={clip.src}
+          data-poster={clip.poster}
+          aria-label="A short loop from the recorded run, sped up, framed as a vertical clip."
+        ></video>
+        <span class="made-with"><Mark size={14} /> Made with Liveswarm</span>
+      </div>
+      <figcaption>{site.demo.label}. The corner mark is the one every video carries.</figcaption>
+    </figure>
+    <div class="share-copy">
+      <h2 id="share-title" data-b="type">Record and share</h2>
+      <p class="lead" data-b>
+        <code>/liveswarm:record</code> turns your next session into a sped-up video, vertical and
+        widescreen, ready for X, TikTok or YouTube.
+      </p>
+      <p data-b>
+        Recording only happens when you ask for it, and it adds nothing to your app. Every video
+        carries a small “Made with Liveswarm” mark in the corner. It needs Chrome and ffmpeg.
+        Tested on macOS. Linux is untested, and Windows is not supported.
+      </p>
+    </div>
+  </div>
+</section>

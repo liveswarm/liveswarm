@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Liveswarm end card</title>
+<style>
+  :root {
+    --bg: #07070a;
+    --ink: #f3f1ec;
+    --dim: #8b8a93;
+    --line: rgba(255,255,255,.10);
+    --u: calc(min(100vw, 100vh) / 100);
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: 100%; height: 100%; background: var(--bg); overflow: hidden; }
+  body {
+    color: var(--ink);
+    font-family: "SF Pro Display", -apple-system, "Inter", "Helvetica Neue", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    background:
+      radial-gradient(60% 45% at 50% 38%, rgba(124,108,255,.14), transparent 70%),
+      radial-gradient(40% 30% at 62% 62%, rgba(255,140,90,.06), transparent 70%),
+      var(--bg);
+    display: flex; align-items: center; justify-content: center;
+  }
+  main { display: flex; flex-direction: column; align-items: center; text-align: center; gap: calc(var(--u) * 7); padding: 0 calc(var(--u) * 6); }
+  .brand { display: flex; flex-direction: column; align-items: center; gap: calc(var(--u) * 4); }
+  .brand svg { width: calc(var(--u) * 17); height: calc(var(--u) * 17); overflow: visible; }
+  .word { font-size: calc(var(--u) * 9.4); font-weight: 300; letter-spacing: .14em; text-indent: .14em; line-height: 1; }
+  .word b { font-weight: 600; }
+  .stats { display: flex; align-items: stretch; gap: 0; }
+  .stat { padding: 0 calc(var(--u) * 6); display: flex; flex-direction: column; gap: calc(var(--u) * 1.4); align-items: center; }
+  .stat + .stat { border-left: 1px solid var(--line); }
+  .num { font-size: calc(var(--u) * 10); font-weight: 200; letter-spacing: -.02em; line-height: 1; font-variant-numeric: tabular-nums; }
+  .num small { font-size: .4em; color: var(--dim); font-weight: 300; letter-spacing: .02em; margin-left: .25em; }
+  .lab { font-size: calc(var(--u) * 1.9); letter-spacing: .22em; text-transform: uppercase; color: var(--dim); }
+  .note { font-size: calc(var(--u) * 2.5); color: var(--dim); letter-spacing: .06em; }
+  .url { font-size: calc(var(--u) * 3); letter-spacing: .12em; color: var(--ink); opacity: .9; }
+  @media (orientation: portrait) {
+    .stats { flex-direction: column; }
+    .stat { padding: calc(var(--u) * 4) 0; width: calc(var(--u) * 60); }
+    .stat + .stat { border-left: 0; border-top: 1px solid var(--line); }
+    .num { font-size: calc(var(--u) * 12); }
+    .lab { font-size: calc(var(--u) * 2.4); }
+    .note { font-size: calc(var(--u) * 3); }
+    .url { font-size: calc(var(--u) * 3.6); }
+  }
+</style>
+</head>
+<body>
+<main>
+  <div class="brand">
+    <svg viewBox="0 0 64 64" aria-hidden="true">
+      <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f3f1ec"/><stop offset="1" stop-color="#b9b3ff"/></linearGradient></defs>
+      <path d="M8 6 L8 46 L19 36 L27 54 L35 50.5 L27 33 L42 33 Z" fill="url(#g)"/>
+      <circle cx="46" cy="14" r="3.6" fill="#7c6cff"/>
+      <circle cx="56" cy="27" r="2.8" fill="#ff8c5a"/>
+      <circle cx="50" cy="44" r="2.4" fill="#4fd1a5"/>
+      <circle cx="58" cy="54" r="1.8" fill="#6ab7ff"/>
+    </svg>
+    <div class="word"><b>Live</b>swarm</div>
+  </div>
+  <div class="stats" id="stats"></div>
+  <div class="note">Real Claude Code session &middot; sped up</div>
+  <div class="url">liveswarm.dev</div>
+</main>
+<script>
+  // Numbers come from the recorder via the query string. Unknown numbers are simply omitted.
+  const q = new URLSearchParams(location.search);
+  const el = document.getElementById('stats');
+  const add = (num, unit, label) => {
+    const d = document.createElement('div'); d.className = 'stat';
+    d.innerHTML = '<div class="num"></div><div class="lab"></div>';
+    d.firstChild.textContent = num;
+    if (unit) { const s = document.createElement('small'); s.textContent = unit; d.firstChild.appendChild(s); }
+    d.lastChild.textContent = label;
+    el.appendChild(d);
+  };
+  const int = (k) => { const v = q.get(k); return v !== null && v !== '' && Number.isFinite(+v) && +v >= 0 ? Math.round(+v) : null; };
+  const agents = int('agents'), edits = int('edits'), secs = int('seconds');
+  if (agents !== null) add(String(agents), '', agents === 1 ? 'agent' : 'agents');
+  if (edits !== null) add(String(edits), '', edits === 1 ? 'edit' : 'edits');
+  if (secs !== null) {
+    if (secs < 90) add(String(secs), 'sec', 'real time');
+    else { const m = secs / 60; add(m < 10 ? m.toFixed(1) : String(Math.round(m)), 'min', 'real time'); }
+  }
+  if (!el.children.length) el.remove();
+</script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+---
+const faqs = [
+  {
+    q: 'What does it work with?',
+    a: 'Claude Code, including parallel subagents: each one gets its own cursor. It works on any web app with a running dev server. On Vite apps an optional setup step makes cursors land on the exact element; on other frameworks they land where the page changes. Tested on macOS; Linux is untested and Windows is not supported. Watching video projects, live streams, games and the map view are in development.',
+  },
+  {
+    q: 'Does it slow Claude down?',
+    a: 'No. Events are sent in the background, so Claude never waits on Liveswarm, and watching adds no tokens to Claude’s context. Each event takes about 12 milliseconds on the side. The measured numbers are under “What it costs you”.',
+  },
+  {
+    q: 'Does my code leave my machine?',
+    a: 'No. Everything runs locally. There is no account and no telemetry.',
+  },
+  {
+    q: 'Is it free?',
+    a: 'Yes. Liveswarm is free and open source under the MIT license.',
+  },
+  {
+    q: 'Does it work with Codex?',
+    a: 'Not yet. Codex support is coming. Leave your email below and you will hear when it lands.',
+  },
+  {
+    q: 'Are the cursors real?',
+    a: 'In Liveswarm, yes: every cursor is a real agent, and it moves only when that agent edits something. The animation at the top of this page is a scripted preview. The video under “Real run” is a recording of a real Claude Code session, sped up.',
+  },
+];
+---
+
+<section class="band faq" id="faq" data-scene aria-labelledby="faq-title">
+  <div class="wrap faq-grid">
+    <h2 id="faq-title" data-b="type">Questions</h2>
+    <div class="faq-list" id="faq-list">
+      {faqs.map((f, i) => (
+        <details data-b="drop" open={i === 0}>
+          <summary>{f.q}</summary>
+          <p>{f.a}</p>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
