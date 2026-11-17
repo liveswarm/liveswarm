@@ -66,7 +66,16 @@ export function startProxy({ upstream, conductor, port, onNotice = () => {} }) {
   const sockets = new Set();   // upgraded websocket sockets (not covered by closeAllConnections)
   const track = (...ss) => ss.forEach((x) => { sockets.add(x); x.once('close', () => sockets.delete(x)); });
 
+  // Refuse what a browser on another site could send: a Host that is not this proxy (DNS rebinding)
+  // and an Origin from a non-local page (cross-site requests and websocket hijacking). Only after that
+  // is the Origin rewritten to the upstream, so the dev server's own checks keep working.
+  const LOCAL = /^(localhost|127\.0\.0\.1|\[::1\])$/;
+  const localHost = (h) => { try { return LOCAL.test(new URL('http://' + h).hostname); } catch { return false; } };
+  const localOrigin = (o) => { try { const u = new URL(o); return (u.protocol === 'http:' || u.protocol === 'https:') && (LOCAL.test(u.hostname) || u.hostname.endsWith('.localhost')); } catch { return false; } };
+  const refused = (req) => !localHost(String(req.headers.host || '')) || (req.headers.origin !== undefined && !localOrigin(String(req.headers.origin)));
+
   const server = http.createServer((req, res) => {
+    if (refused(req)) { res.writeHead(403, { 'content-type': 'text/plain' }); return res.end('Liveswarm proxy only serves local pages.'); }
     const headers = { ...req.headers, host: up.host, 'accept-encoding': 'identity' };
     if (headers.origin) headers.origin = up.origin;
     if (headers.referer) headers.referer = String(headers.referer).replace(proxyOrigin, up.origin);
@@ -104,6 +113,7 @@ export function startProxy({ upstream, conductor, port, onNotice = () => {} }) {
 
   // WebSocket (Vite /, Next /_next/webpack-hmr, Astro, ...): forward the raw handshake and pipe bytes.
   server.on('upgrade', (req, socket, head) => {
+    if (refused(req)) { socket.end('HTTP/1.1 403 Forbidden\r\nConnection: close\r\n\r\n'); return; }
     const s = isTls ? tls.connect({ host: up.hostname, port: upPort, servername: up.hostname, rejectUnauthorized: !isLocal }) : net.connect(upPort, up.hostname);
     track(socket, s);
     const fail = () => { socket.destroy(); s.destroy(); };

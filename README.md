@@ -7,7 +7,7 @@
 **Watch Claude Code build your app as a swarm of live cursors.**
 Every cursor is a real agent. Every move is a real edit.
 
-Free and open source. No model calls. Nothing leaves your machine.
+Free and open source. No model calls. Runs locally, no account, no telemetry.
 
 ## Install
 
@@ -39,6 +39,17 @@ No model calls and no tokens spent. Liveswarm only listens to events Claude Code
 
 Everything stays on 127.0.0.1. Hook events travel over a local unix socket. The live feed only answers pages on your own machine (localhost, 127.0.0.1, `*.localhost`): any other website you have open gets refused. If your app runs on a LAN address or a custom dev domain, allow it with `LIVESWARM_ORIGINS=http://192.168.1.5:5173`. File contents are never forwarded and shell commands are redacted before display or logging. No accounts, no telemetry, no network calls.
 
+### What the hooks access
+
+Exactly what runs, from [liveswarm/plugin/hooks/hooks.json](liveswarm/plugin/hooks/hooks.json):
+
+- **Events:** `SessionStart`, `PreToolUse`, `PostToolUse`, `PostToolUseFailure`, `SubagentStart`, `SubagentStop`, `Stop`, `SessionEnd`. All are `async` with a 10 s timeout, so Claude never waits on them.
+- **What each hook does:** [`scripts/emit.sh`](liveswarm/plugin/scripts/emit.sh) pipes the hook payload Claude Code passes on stdin to the local conductor over a unix socket (`~/.liveswarm/hook.sock`), then exits 0 silently. It prints nothing and makes no other network call. On `SessionStart`, [`scripts/ensure.sh`](liveswarm/plugin/scripts/ensure.sh) first starts the conductor with your local `node` if it isn't running.
+- **What the payload contains:** whatever Claude Code sends for that event, which for edits includes the tool input (file path and the new text). That is the only place file contents travel, and only on your machine, from the hook to the conductor.
+- **What the conductor keeps:** tool name, file path, line range and counts, and a short label (a file name, or a shell command cut to 48 characters with secrets like tokens, keys and passwords masked). Bodies (`content`, `new_string`, `old_string`, `edits`, `prompt`) are replaced with their length, tool output is dropped except metadata, and transcript paths are removed. To find the changed lines after an edit, it reads the edited file locally. Logs go to `~/.liveswarm/sessions/` (folder mode 700).
+- **Where it listens:** the unix socket above and `127.0.0.1:7777` (`LIVESWARM_PORT` to change), which the overlay in your preview reads. Nothing binds to other interfaces.
+- **Off switch:** `LIVESWARM=off` makes every hook exit immediately.
+
 ## How it works
 
 ```
@@ -69,8 +80,8 @@ Liveswarm uses port 7777 on 127.0.0.1. If another program uses it, `/liveswarm:d
 
 ## Credits
 
-Inspired by Joel Califa's Swarm and Dhvanil Patel's Swarm Rebuild, which made the swarm-cursor look famous.
-Their cursors are a beautiful animation; Liveswarm's are real agents doing real work.
+Inspired by Joel Califa's Swarm, a concept animation, and Dhvanil Patel's Swarm Rebuild, a Chrome extension, which made the swarm-cursor look famous.
+Liveswarm's cursors are real Claude Code agents doing real work on your app.
 
 Liveswarm is an independent project and is not affiliated with or endorsed by Anthropic. Claude and Claude Code are trademarks of Anthropic.
 

@@ -3,14 +3,15 @@
   "name": "liveswarm",
   "description": "Liveswarm: watch Claude Code build your app as a swarm of live cursors.",
   "owner": {
-    "name": "Liveswarm"
+    "name": "Everest Egenhofer",
+    "url": "https://github.com/everest-gif"
   },
   "plugins": [
     {
       "name": "liveswarm",
       "source": "./liveswarm/plugin",
       "description": "Every Claude Code agent appears as a named cursor on your live app preview. Free, open source, no model calls.",
-      "version": "0.2.2",
+      "version": "0.2.3",
       "license": "MIT",
       "keywords": [
         "cursors",

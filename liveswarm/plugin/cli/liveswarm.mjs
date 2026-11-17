@@ -180,7 +180,7 @@ async function demo(argv) {
   try { port = await listenFrom(server, o.port || 7790, !!o.port); } catch (e) { err(e.code === 'EADDRINUSE' ? `port ${o.port} is already in use.` : `cannot start the demo server: ${e.message}`); return 1; }
   const url = `http://127.0.0.1:${port}/`;
   out(`Liveswarm demo: ${url}`);
-  out('Replay of a real Claude Code session. No setup, nothing leaves your machine. Ctrl-C to stop.');
+  out('Replay of a real Claude Code session. No setup, runs locally. Ctrl-C to stop.');
   if (!o['no-open']) openBrowser(url);
   await waitForExit(() => new Promise((r) => { server.close(() => r()); server.closeAllConnections?.(); }));
   return 0;
