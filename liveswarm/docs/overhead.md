@@ -42,8 +42,8 @@ yourself costs what any short prompt costs, because Claude reads the command and
 |---|---|
 | Conductor memory | about 66 MB after 200 events (57.7 MB median in the run below) |
 | Conductor CPU | brief blips during bursts, idle otherwise |
-| Disk | about 0.5 KB per event in `~/.liveswarm/sessions/`, kept 7 days |
-| Network | Liveswarm makes no network calls beyond 127.0.0.1 |
+| Disk | about 0.5 KB per event in `~/.liveswarm/sessions/`, kept until you delete it |
+| Network | the hooks and conductor make no network calls beyond 127.0.0.1 |
 
 ## Under load: the demo session (main agent plus 12 subagents)
 

@@ -37,7 +37,7 @@ No model calls and no tokens spent. Liveswarm only listens to events Claude Code
 
 ## Privacy
 
-Everything stays on 127.0.0.1. Hook events travel over a local unix socket. The live feed only answers pages on your own machine (localhost, 127.0.0.1, `*.localhost`): any other website you have open gets refused. If your app runs on a LAN address or a custom dev domain, allow it with `LIVESWARM_ORIGINS=http://192.168.1.5:5173`. File contents are never forwarded and shell commands are redacted before display or logging. No accounts, no telemetry, no network calls.
+Everything stays on 127.0.0.1. Hook events travel over a local unix socket. The live feed and the `watch` proxy only answer pages on your own machine (localhost, 127.0.0.1, `*.localhost`): any other website you have open gets refused. If your app runs on a LAN address or a custom dev domain, allow it with `LIVESWARM_ORIGINS=http://192.168.1.5:5173`. File contents are never forwarded and shell commands are redacted before display or logging. No accounts, no telemetry. The hooks and conductor make no network calls; only `record` downloads its recorder once, on first use.
 
 ### What the hooks access
 
@@ -45,7 +45,7 @@ Exactly what runs, from [liveswarm/plugin/hooks/hooks.json](liveswarm/plugin/hoo
 
 - **Events:** `SessionStart`, `PreToolUse`, `PostToolUse`, `PostToolUseFailure`, `SubagentStart`, `SubagentStop`, `Stop`, `SessionEnd`. All are `async` with a 10 s timeout, so Claude never waits on them.
 - **What each hook does:** [`scripts/emit.sh`](liveswarm/plugin/scripts/emit.sh) pipes the hook payload Claude Code passes on stdin to the local conductor over a unix socket (`~/.liveswarm/hook.sock`), then exits 0 silently. It prints nothing and makes no other network call. On `SessionStart`, [`scripts/ensure.sh`](liveswarm/plugin/scripts/ensure.sh) first starts the conductor with your local `node` if it isn't running.
-- **What the payload contains:** whatever Claude Code sends for that event, which for edits includes the tool input (file path and the new text). That is the only place file contents travel, and only on your machine, from the hook to the conductor.
+- **What the payload contains:** whatever Claude Code sends for that event. For an edit that includes the new text; after a file read or a shell command it includes what came back. It travels only on your machine, from the hook to the conductor, which drops it (next point).
 - **What the conductor keeps:** tool name, file path, line range and counts, and a short label (a file name, or a shell command cut to 48 characters with secrets like tokens, keys and passwords masked). Bodies (`content`, `new_string`, `old_string`, `edits`, `prompt`) are replaced with their length, tool output is dropped except metadata, and transcript paths are removed. To find the changed lines after an edit, it reads the edited file locally. Logs go to `~/.liveswarm/sessions/` (folder mode 700).
 - **Where it listens:** the unix socket above and `127.0.0.1:7777` (`LIVESWARM_PORT` to change), which the overlay in your preview reads. Nothing binds to other interfaces.
 - **Off switch:** `LIVESWARM=off` makes every hook exit immediately.
